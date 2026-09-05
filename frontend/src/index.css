@@ -1,0 +1,430 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+* { box-sizing: border-box; }
+
+.hidden { display: none !important; }
+
+:root {
+  /* Palet mengikuti mockup Figma: biru sistem, box info berwarna */
+  --primary: #1c4e94;
+  --primary-2: #2f6fc4;
+  --primary-dark: #0f2e5c;
+  --navy: #0f2547;
+  --bg: #f3f6fb;
+  --surface: #ffffff;
+  --text: #16233a;
+  --muted: #6b7686;
+  --border: #e4e9f2;
+  --success: #1f9d55;
+  --success-bg: #e7f8ee;
+  --danger: #d9362b;
+  --danger-bg: #fdeae8;
+  --warning: #d9820f;
+  --warning-bg: #fdf1de;
+  --info: #1c63d9;
+  --info-bg: #eaf2fd;
+  --shadow: 0 16px 40px rgba(16, 40, 80, .09);
+}
+
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+
+/* ===== HEADER (masuk.html / keluar.html) ===== */
+.site-header {
+  height: 76px;
+  padding: 0 6vw;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-mark {
+  width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center;
+  color: #fff; font-weight: 800;
+  background: var(--primary);
+  font-size: 16px;
+}
+.brand strong { display: block; font-size: 14px; letter-spacing: .01em; font-weight: 700; }
+.brand span { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+.header-badge {
+  padding: 8px 14px; border-radius: 999px;
+  background: var(--info-bg); color: var(--info);
+  font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+}
+
+.container { width: min(1120px, 90%); margin: 0 auto; padding: 52px 0 70px; }
+.narrow { width: min(560px, 92%); margin: 0 auto; }
+.center { text-align: center; }
+
+.eyebrow {
+  color: var(--primary); font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; font-size: 12px;
+}
+h1 { font-size: clamp(26px, 4vw, 34px); margin: 8px 0 10px; line-height: 1.2; font-weight: 800; color: var(--primary); text-align: center; }
+h2 { font-size: 22px; margin: 6px 0; font-weight: 800; }
+.subtitle { color: var(--muted); line-height: 1.7; margin: 0 auto; max-width: 560px; font-size: 14px; text-align: center; }
+.narrow h1, .narrow > .subtitle, .narrow .eyebrow { text-align: center; }
+
+/* ===== CARD ===== */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; box-shadow: var(--shadow);
+}
+.form-card { padding: 32px; margin-top: 28px; }
+.field { margin-bottom: 18px; }
+label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 7px; color: var(--text); }
+input, textarea {
+  width: 100%; border: 1px solid var(--border); border-radius: 12px;
+  padding: 13px 15px; outline: none; background: var(--bg); color: var(--text);
+  font-size: 14px;
+}
+textarea { min-height: 100px; resize: vertical; }
+input:focus, textarea:focus { border-color: var(--primary-2); background: var(--surface); box-shadow: 0 0 0 4px rgba(47,111,196,.12); }
+input::placeholder, textarea::placeholder { color: #9aa4b2; }
+
+.btn {
+  border: 0; border-radius: 12px; padding: 14px 18px; font-weight: 700;
+  font-size: 14px; transition: transform .12s ease, background .15s ease, box-shadow .15s ease;
+  text-transform: uppercase; letter-spacing: .02em;
+}
+.btn:hover:not(:disabled) { transform: translateY(-1.5px); }
+.btn-primary { width: 100%; color: #fff; background: var(--primary); }
+.btn-primary:hover { background: var(--primary-dark); box-shadow: 0 8px 20px rgba(28,78,148,.3); }
+.btn-secondary { background: var(--info-bg); color: var(--info); }
+.btn-danger { background: #fff; color: var(--danger); border: 1.5px solid var(--danger); }
+.btn-success { width: 100%; background: var(--primary); color: #fff; }
+.btn-small { padding: 9px 14px; font-size: 11px; border-radius: 9px; }
+
+/* ===== nama rombongan ===== */
+.name-row { display: flex; gap: 8px; margin-bottom: 9px; }
+.name-row input { flex: 1; }
+.btn-remove-name {
+  width: 42px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface); color: var(--danger); font-weight: 700; font-size: 16px;
+}
+.btn-add-name {
+  border: 1.5px dashed var(--primary-2); background: var(--info-bg); color: var(--primary);
+  border-radius: 10px; padding: 10px 14px; font-weight: 700; font-size: 12.5px; width: 100%;
+  margin-top: 2px; text-transform: none; letter-spacing: 0;
+}
+.btn-copy {
+  background: var(--info-bg); color: var(--info); border: 0;
+  border-radius: 10px; padding: 10px 18px; font-weight: 700; font-size: 12.5px; margin-bottom: 8px;
+  text-transform: none;
+}
+.btn-copy.copied { background: var(--success-bg); color: var(--success); }
+.reminder {
+  color: var(--info); background: var(--info-bg);
+  border-radius: 12px; padding: 12px 15px; font-size: 12.5px; font-weight: 600;
+  margin: 14px 0; text-align: center;
+}
+
+/* ===== status card ===== */
+.status-card { padding: 40px 32px; text-align: center; }
+.status-icon {
+  width: 70px; height: 70px; margin: 0 auto 18px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 28px; font-weight: 800;
+}
+.status-icon.wait { background: var(--warning-bg); color: var(--warning); }
+.status-icon.ok { background: var(--success-bg); color: var(--success); }
+.status-icon.no { background: var(--danger-bg); color: var(--danger); }
+
+.status-card h2 { color: var(--text); }
+#waiting h2, .status-icon.wait ~ .eyebrow { color: var(--warning); }
+#waiting .eyebrow { color: var(--warning); }
+#rejected .eyebrow, #rejected h2 { color: var(--danger); }
+
+/* nomor kunjungan */
+.visitor-code {
+  margin: 18px 0;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: .05em;
+}
+
+.status-box {
+  margin: 22px 0; padding: 14px 16px; border-radius: 14px;
+  background: var(--success-bg); color: var(--success); font-size: 13px; font-weight: 600;
+}
+.status-box strong { color: inherit; }
+#waiting .status-box { background: var(--warning-bg); color: var(--warning); }
+#rejected .status-box { background: var(--danger-bg); color: var(--danger); }
+
+/* ===== ADMIN — sidebar + main panel, sesuai mockup ===== */
+.admin-shell { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 250px; flex-shrink: 0; background: var(--navy); color: #fff;
+  padding: 26px 18px; display: flex; flex-direction: column; gap: 30px;
+}
+.sidebar-brand { display: flex; align-items: center; gap: 11px; padding: 0 6px; }
+.sidebar-brand .brand-mark { background: var(--primary-2); }
+.sidebar-brand strong { display: block; font-size: 13px; color: #fff; }
+.sidebar-brand span { display: block; font-size: 11px; color: #9db3d6; margin-top: 2px; }
+.sidebar-nav { display: flex; flex-direction: column; gap: 4px; }
+.nav-item {
+  padding: 12px 14px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
+  color: #b7c6e2; cursor: pointer; transition: background .15s ease, color .15s ease;
+  text-decoration: none; display: block;
+}
+.nav-item.active { background: var(--primary-2); color: #fff; }
+.main-panel { flex: 1; padding: 40px 4vw; min-width: 0; }
+
+.dashboard { padding-top: 0; }
+.dashboard-top {
+  display: flex; justify-content: space-between; gap: 20px; align-items: end;
+  margin-bottom: 26px;
+}
+.stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 26px;
+}
+.stat { padding: 22px; }
+.stat span { display: block; color: var(--muted); font-size: 12.5px; font-weight: 600; }
+.stat strong { display: block; font-size: 30px; margin-top: 8px; color: var(--primary); }
+
+/* daftar tamu jadi baris card, bukan tabel, sesuai mockup */
+.visitor-list { display: flex; flex-direction: column; gap: 12px; }
+.visitor-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 18px 20px;
+}
+.visitor-row .vinfo { min-width: 0; }
+.visitor-row .vinfo strong { display: block; font-size: 14.5px; }
+.visitor-row .vinfo small { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+.visitor-row .vtime { color: var(--muted); font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.visitor-row .vactions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.badge {
+  display: inline-flex; padding: 6px 11px; border-radius: 999px; font-size: 11px; font-weight: 700;
+}
+.badge.wait { background: var(--warning-bg); color: var(--warning); }
+.badge.ok { background: var(--success-bg); color: var(--success); }
+.badge.no { background: var(--danger-bg); color: var(--danger); }
+
+.empty { padding: 42px; text-align: center; color: var(--muted); }
+
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px);
+  opacity: 0; pointer-events: none; padding: 13px 18px; border-radius: 12px;
+  background: var(--navy); color: #fff; font-size: 13px; transition: .2s ease; z-index: 10;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ===== Animasi ===== */
+.form-card, .status-card { animation: fadeSlideUp .45s ease; }
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.status-icon.wait { animation: radarPing 1.8s ease-out infinite; }
+@keyframes radarPing {
+  0%   { box-shadow: 0 0 0 0 rgba(217,130,15,.28); }
+  70%  { box-shadow: 0 0 0 12px rgba(217,130,15,0); }
+  100% { box-shadow: 0 0 0 0 rgba(217,130,15,0); }
+}
+.status-icon.ok, .status-icon.no { animation: popIn .38s cubic-bezier(.2,.9,.3,1.3); }
+@keyframes popIn {
+  0%   { opacity: 0; transform: scale(.6); }
+  70%  { opacity: 1; transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.visitor-code { animation: fadeSlideUp .45s ease .08s backwards; }
+.visitor-row { transition: transform .12s ease, box-shadow .12s ease; }
+.visitor-row:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(16,40,80,.1); }
+.nav-item:hover:not(.active) { background: rgba(255,255,255,.06); color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .admin-shell { flex-direction: column; }
+  .sidebar { width: 100%; flex-direction: row; align-items: center; overflow-x: auto; }
+  .sidebar-nav { flex-direction: row; }
+}
+@media (max-width: 720px) {
+  .site-header { padding: 0 5%; }
+  .container { padding-top: 35px; }
+  .stats { grid-template-columns: 1fr; }
+  .dashboard-top { align-items: start; flex-direction: column; }
+  .form-card, .status-card { padding: 25px 20px; }
+  .main-panel { padding: 26px 5%; }
+  .visitor-row { flex-wrap: wrap; }
+}
+/* ===== Menu Profil (sidebar bawah) ===== */
+.sidebar-profile {
+  position: relative;
+  margin-top: auto;
+}
+.profile-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 8px;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  text-align: left;
+}
+.profile-trigger:hover { background: rgba(255, 255, 255, 0.1); }
+.profile-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--primary-2); color: #fff;
+  display: grid; place-items: center; font-weight: 800; font-size: 14px;
+  flex-shrink: 0;
+}
+.profile-info { min-width: 0; }
+.profile-info strong { display: block; font-size: 13px; }
+.profile-info span { display: block; font-size: 11px; color: #9db3d6; margin-top: 2px; }
+
+.profile-menu {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  z-index: 20;
+}
+.profile-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  border: 0;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: none;
+}
+.profile-menu-item:hover { background: var(--bg); }
+.profile-menu-item.danger { color: var(--danger); }
+.profile-menu-item + .profile-menu-item { border-top: 1px solid var(--border); }
+
+/* ===== Modal (Ganti Password) ===== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(15, 37, 71, 0.45);
+  display: grid; place-items: center; z-index: 50; padding: 20px;
+}
+.modal-card { width: min(420px, 100%); padding: 28px; }
+.modal-card h2 { margin-bottom: 16px; }
+.modal-actions {
+  display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;
+}
+
+/* ===== Dashboard: grid chart ===== */
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 16px;
+}
+.chart-card { padding: 22px; }
+.chart-card h2 { font-size: 15px; margin-bottom: 14px; }
+
+/* ===== Riwayat: dropdown sort ===== */
+.sort-select {
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 14px; background: var(--surface); color: var(--text);
+  font-size: 13px; font-weight: 600; height: fit-content;
+}
+
+/* ===== Riwayat: baris filter (tanggal/bulan/tahun/urutan/ukuran halaman) ===== */
+.filter-bar {
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px;
+  padding: 18px 20px; margin-bottom: 20px;
+}
+.filter-bar .field label {
+  font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--muted); margin-bottom: 5px;
+}
+.filter-bar select {
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 9px 12px; background: var(--bg); color: var(--text);
+  font-size: 13px; font-weight: 600; min-width: 110px;
+}
+
+/* Input kalender (react-datepicker) supaya seragam sama dropdown lain */
+.date-filter-input {
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 9px 12px; background: var(--bg); color: var(--text);
+  font-size: 13px; font-weight: 600; min-width: 130px;
+}
+.date-filter-input:focus {
+  outline: none; border-color: var(--primary-2);
+  box-shadow: 0 0 0 3px rgba(47,111,196,.15);
+}
+
+/* Header kalender custom: dropdown Bulan & Tahun + tombol panah */
+.datepicker-header {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 8px 10px 10px;
+}
+.datepicker-header select {
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 5px 8px; background: var(--surface); color: var(--text);
+  font-size: 12.5px; font-weight: 700;
+}
+.datepicker-nav {
+  border: 0; background: var(--info-bg); color: var(--primary);
+  width: 26px; height: 26px; border-radius: 8px; font-size: 15px;
+  font-weight: 800; display: grid; place-items: center; padding: 0;
+}
+.datepicker-nav:disabled { opacity: .35; cursor: not-allowed; }
+
+/* Override tema react-datepicker supaya sewarna dengan project */
+.react-datepicker { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; border-color: var(--border); border-radius: 14px; overflow: hidden; }
+.react-datepicker__header { background: var(--bg); border-bottom: 1px solid var(--border); }
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range { background: var(--primary) !important; color: #fff !important; }
+.react-datepicker__day--keyboard-selected { background: var(--primary-2); color: #fff; }
+.react-datepicker__day:hover { background: var(--info-bg); }
+.react-datepicker__triangle { display: none; }
+
+/* ===== Riwayat: kontrol pagination ===== */
+.pagination {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  margin-top: 20px; font-size: 13px; font-weight: 600; color: var(--muted);
+}
+.pagination button:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+/* ===== Riwayat: tombol Unduh Excel ===== */
+.btn-download-excel {
+  width: auto; background: var(--success); color: #fff;
+  padding: 16px 24px; font-size: 14.5px;
+}
+.btn-download-excel:hover { background: #17803f; }
+
+@media (max-width: 720px) {
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .filter-bar select { width: 100%; }
+}
+
+@media (max-width: 900px) {
+  .chart-grid { grid-template-columns: 1fr; }
+}

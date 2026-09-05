@@ -1,0 +1,21 @@
+{
+  "name": "logbook-kunjungan-tamu-ruangan-jarkom-bbmkg2",
+  "version": "1.0.0",
+  "description": "Halaman pengunjung sengaja DIPISAH:\r - masuk.html = khusus QR pintu masuk\r - keluar.html = khusus QR pintu keluar\r - admin.html = khusus petugas/admin",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThomasBecket/logbook-kunjungan-tamu-ruangan-jarkom-bbmkg2"
+  },
+  "keywords": [],
+  "author": "Thomas Becket Tegar Surya Christy",
+  "license": "ISC",
+  "homepage": "https://github.com/ThomasBecket/logbook-kunjungan-tamu-ruangan-jarkom-bbmkg2#readme",
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
