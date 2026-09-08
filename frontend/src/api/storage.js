@@ -1,60 +1,76 @@
 // storage.js
-// Layer data untuk data kunjungan. Untuk sekarang masih pakai localStorage
-// (nanti tiap fungsi di sini akan diganti isinya jadi panggilan axios ke
-// backend /api/pengunjung, tanpa perlu mengubah kode di pages/ yang
-// memanggilnya).
+// Layer data — SEKARANG memanggil backend Express (/api/pengunjung),
+// bukan lagi localStorage. Nama file dipertahankan "storage.js" supaya
+// import di semua halaman tidak perlu diubah.
+//
+// Pengecualian: 3 fungsi ambilIdTerakhir/simpanIdTerakhir/hapusIdTerakhir
+// TETAP pakai localStorage, karena itu cuma kenyamanan UI di browser ini
+// (auto-isi nomor kunjungan terakhir di Form Keluar), bukan data inti yang
+// perlu konsisten di semua device — jadi tidak perlu database.
 
-const KUNCI = "bbmkg_tamu_v1";
-const KUNCI_ID_TERAKHIR = "bbmkg_id_terakhir";
+import api from "./client";
 
-export function muatDataTamu() {
+// Ambil pesan error yang jelas dari response backend, atau pesan default
+function pesanError(err, default_) {
+  return err?.response?.data?.error || default_;
+}
+
+// GET /api/pengunjung — semua data kunjungan
+export async function muatDataTamu() {
+  const res = await api.get("/pengunjung");
+  return res.data;
+}
+
+// POST /api/pengunjung — tamu masuk submit data baru
+// Mengembalikan objek kunjungan lengkap dari backend
+export async function kirimKunjungan({ namaTamu, unitKerja, keperluan }) {
   try {
-    return JSON.parse(localStorage.getItem(KUNCI)) || [];
-  } catch {
-    return [];
+    const res = await api.post("/pengunjung", { namaTamu, unitKerja, keperluan });
+    return res.data;
+  } catch (err) {
+    throw new Error(pesanError(err, "Gagal mengirim data kunjungan."));
   }
 }
 
-export function simpanDataTamu(data) {
-  localStorage.setItem(KUNCI, JSON.stringify(data));
+// GET /api/pengunjung/:id — cek status 1 kunjungan (tombol "Cek Status")
+export async function cekStatusKunjungan(id) {
+  try {
+    const res = await api.get(`/pengunjung/${id}`);
+    return res.data;
+  } catch (err) {
+    throw new Error(pesanError(err, "Nomor kunjungan tidak ditemukan."));
+  }
 }
 
-// TODO: setelah backend siap, id akan digenerate di server dengan format
-// DDMMYYYY-NNN (lihat buatIdKunjungan.js di backend). Untuk sekarang masih
-// pakai format sementara T-XXXXXX di sisi frontend.
-export function buatIdKunjungan() {
-  return "T-" + Date.now().toString(36).toUpperCase();
+// PATCH /api/pengunjung/:id/status — admin approve/reject
+export async function ubahStatusKunjungan(id, status) {
+  try {
+    const res = await api.patch(`/pengunjung/${id}/status`, { status });
+    return res.data;
+  } catch (err) {
+    throw new Error(pesanError(err, "Gagal mengubah status."));
+  }
 }
 
-export function waktuIsoSekarang() {
-  return new Date().toISOString();
+// POST /api/pengunjung/:id/keluar — konfirmasi tamu keluar
+export async function catatKunjunganKeluar(id) {
+  try {
+    const res = await api.post(`/pengunjung/${id}/keluar`);
+    return res.data;
+  } catch (err) {
+    throw new Error(pesanError(err, "Gagal mencatat kepulangan."));
+  }
 }
 
-export function formatTanggal(isoString) {
-  if (!isoString) return "-";
-  return (
-    new Date(isoString).toLocaleString("id-ID", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }) + " WIB"
-  );
-}
-
-export function formatWaktuSekarang() {
-  return formatTanggal(waktuIsoSekarang());
-}
+// ===== Bagian ini tetap localStorage (kenyamanan UI, bukan data inti) =====
+const KUNCI_ID_TERAKHIR = "bbmkg_id_terakhir";
 
 export function ambilIdTerakhir() {
   return localStorage.getItem(KUNCI_ID_TERAKHIR);
 }
-
 export function simpanIdTerakhir(id) {
   localStorage.setItem(KUNCI_ID_TERAKHIR, id);
 }
-
 export function hapusIdTerakhir() {
   localStorage.removeItem(KUNCI_ID_TERAKHIR);
 }

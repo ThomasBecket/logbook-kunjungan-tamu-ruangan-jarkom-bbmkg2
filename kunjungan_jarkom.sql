@@ -52,13 +52,13 @@ CREATE TABLE `pengunjung_nama` (
 );
 
 -- --------------------------------------------------------
--- Tabel: pengunjung_counter
--- Menyimpan nomor urut per tanggal, untuk generate
--- id_pengunjung format DDMMYYYY-NNN (contoh: 09022026-001)
+-- Tabel: nomor_kunjungan
+-- Menyimpan nomor urut kunjungan per tanggal
+-- Nomor urut digenerate ke id_pengunjung dengan format DDMMYYYY-NNN (contoh: 09022026-001)
 -- --------------------------------------------------------
-CREATE TABLE `pengunjung_counter` (
+CREATE TABLE `nomor_kunjungan` (
   `tanggal` VARCHAR(8) NOT NULL,   -- format DDMMYYYY
-  `counter` INT(11) NOT NULL DEFAULT 0,
+  `nomor` INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`tanggal`)
 );
 

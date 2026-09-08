@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from "xlsx";
 import { muatDataTamu } from "../api/storage";
 import StatusBadge from "../components/StatusBadge";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const OPSI_UKURAN_HALAMAN = [10, 50, 100, 250, 500, "semua"];
 
@@ -25,9 +26,7 @@ function HeaderKalender({
 }) {
   const tahunSekarang = new Date().getFullYear();
   const opsiTahun = [];
-
-  //Untuk setting rentang tahunnya, misal: (5 tahun kurang dari tahun sekarang) dan (1 tahun lebih dari tahun sekarang)
-  for (let t = tahunSekarang + 1; t >= tahunSekarang - 5; t--) opsiTahun.push(t);
+  for (let t = tahunSekarang + 1; t >= tahunSekarang - 30; t--) opsiTahun.push(t);
 
   return (
     <div className="datepicker-header">
@@ -72,6 +71,7 @@ function HeaderKalender({
 }
 
 export default function AdminRiwayatTamu() {
+  useDocumentTitle("Riwayat Tamu — BBMKG Wilayah II");
   const [daftarTamu, setDaftarTamu] = useState([]);
 
   // Filter rentang tanggal — sekarang pakai objek Date (bukan string),
@@ -87,7 +87,9 @@ export default function AdminRiwayatTamu() {
   const [halamanAktif, setHalamanAktif] = useState(1);
 
   useEffect(() => {
-    setDaftarTamu(muatDataTamu());
+    muatDataTamu()
+      .then(setDaftarTamu)
+      .catch(() => setDaftarTamu([]));
   }, []);
 
   const dataTerfilter = useMemo(() => {

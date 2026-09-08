@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ToastProvider } from "./context/ToastContext";
 import FormMasuk from "./pages/FormMasuk";
 import FormKeluar from "./pages/FormKeluar";
+import StatusKunjungan from "./pages/StatusKunjungan";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminTamuMenunggu from "./pages/AdminTamuMenunggu";
 import AdminRiwayatTamu from "./pages/AdminRiwayatTamu";
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/" element={<Navigate to="/form-masuk" replace />} />
           <Route path="/form-masuk" element={<FormMasuk />} />
           <Route path="/form-keluar" element={<FormKeluar />} />
+          <Route path="/status/:id" element={<StatusKunjungan />} />
 
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />

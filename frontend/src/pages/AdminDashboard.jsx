@@ -13,6 +13,7 @@ import {
   Legend,
 } from "recharts";
 import { muatDataTamu } from "../api/storage";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const WARNA_STATUS = {
   "Menunggu Persetujuan": "#d9820f",
@@ -40,10 +41,13 @@ function ambilData7HariTerakhir(daftarTamu) {
 }
 
 export default function AdminDashboard() {
+  useDocumentTitle("Dashboard — BBMKG Wilayah II");
   const [daftarTamu, setDaftarTamu] = useState([]);
 
   useEffect(() => {
-    setDaftarTamu(muatDataTamu());
+    muatDataTamu()
+      .then(setDaftarTamu)
+      .catch(() => setDaftarTamu([]));
   }, []);
 
   const dataChart = useMemo(() => ambilData7HariTerakhir(daftarTamu), [daftarTamu]);

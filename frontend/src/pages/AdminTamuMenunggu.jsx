@@ -1,14 +1,30 @@
 import { useEffect, useMemo, useState } from "react";
 import { useToast } from "../context/ToastContext";
-import { muatDataTamu, simpanDataTamu } from "../api/storage";
+import { muatDataTamu, ubahStatusKunjungan } from "../api/storage";
 import StatusBadge from "../components/StatusBadge";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function AdminTamuMenunggu() {
+  useDocumentTitle("Tamu Menunggu — BBMKG Wilayah II");
   const tampilkanToast = useToast();
   const [daftarTamu, setDaftarTamu] = useState([]);
+  const [memuat, setMemuat] = useState(true);
+  const [gagalMemuat, setGagalMemuat] = useState(false);
+
+  async function muatUlang() {
+    try {
+      const data = await muatDataTamu();
+      setDaftarTamu(data);
+      setGagalMemuat(false);
+    } catch {
+      setGagalMemuat(true);
+    } finally {
+      setMemuat(false);
+    }
+  }
 
   useEffect(() => {
-    setDaftarTamu(muatDataTamu());
+    muatUlang();
   }, []);
 
   const jumlahMenunggu = useMemo(
@@ -20,13 +36,14 @@ export default function AdminTamuMenunggu() {
     [daftarTamu]
   );
 
-  function ubahStatus(id, status) {
-    const diperbarui = muatDataTamu().map((v) =>
-      v.id === id ? { ...v, status } : v
-    );
-    simpanDataTamu(diperbarui);
-    setDaftarTamu(diperbarui);
-    tampilkanToast(status === "Diterima" ? "Tamu dikonfirmasi." : "Tamu ditolak.");
+  async function ubahStatus(id, status) {
+    try {
+      await ubahStatusKunjungan(id, status);
+      tampilkanToast(status === "Diterima" ? "Tamu dikonfirmasi." : "Tamu ditolak.");
+      muatUlang();
+    } catch (err) {
+      tampilkanToast(err.message);
+    }
   }
 
   return (
@@ -41,58 +58,70 @@ export default function AdminTamuMenunggu() {
         </div>
       </div>
 
-      <div className="stats">
-        <div className="card stat">
-          <span>Menunggu Konfirmasi</span>
-          <strong>{jumlahMenunggu}</strong>
+      {gagalMemuat && (
+        <div className="card empty">
+          Gagal memuat data. Pastikan server backend sedang berjalan.
         </div>
-        <div className="card stat">
-          <span>Sedang Di Dalam</span>
-          <strong>{jumlahDiDalam}</strong>
-        </div>
-        <div className="card stat">
-          <span>Total Data</span>
-          <strong>{daftarTamu.length}</strong>
-        </div>
-      </div>
+      )}
 
-      {daftarTamu.length ? (
-        <div className="visitor-list">
-          {daftarTamu.map((v) => (
-            <div className="card visitor-row" key={v.id}>
-              <div className="vinfo">
-                <strong>{(v.namaTamu || []).join(", ")}</strong>
-                <small>
-                  {v.unitKerja} • {v.keperluan}
-                </small>
-              </div>
-              <div className="vtime">{v.waktuMasuk}</div>
-              <div className="vactions">
-                {v.status === "Menunggu Persetujuan" ? (
-                  <>
-                    <button
-                      className="btn btn-danger btn-small"
-                      onClick={() => ubahStatus(v.id, "Ditolak")}
-                    >
-                      Tolak
-                    </button>
-                    <button
-                      className="btn btn-primary btn-small"
-                      style={{ width: "auto" }}
-                      onClick={() => ubahStatus(v.id, "Diterima")}
-                    >
-                      Konfirmasi
-                    </button>
-                  </>
-                ) : (
-                  <StatusBadge status={v.status} />
-                )}
-              </div>
+      {!gagalMemuat && (
+        <>
+          <div className="stats">
+            <div className="card stat">
+              <span>Menunggu Konfirmasi</span>
+              <strong>{jumlahMenunggu}</strong>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="card empty">Belum ada data kunjungan.</div>
+            <div className="card stat">
+              <span>Sedang Di Dalam</span>
+              <strong>{jumlahDiDalam}</strong>
+            </div>
+            <div className="card stat">
+              <span>Total Data</span>
+              <strong>{daftarTamu.length}</strong>
+            </div>
+          </div>
+
+          {memuat ? (
+            <div className="card empty">Memuat data...</div>
+          ) : daftarTamu.length ? (
+            <div className="visitor-list">
+              {daftarTamu.map((v) => (
+                <div className="card visitor-row" key={v.id}>
+                  <div className="vinfo">
+                    <strong>{(v.namaTamu || []).join(", ")}</strong>
+                    <small>
+                      {v.unitKerja} • {v.keperluan}
+                    </small>
+                  </div>
+                  <div className="vtime">{v.waktuMasuk}</div>
+                  <div className="vactions">
+                    {v.status === "Menunggu Persetujuan" ? (
+                      <>
+                        <button
+                          className="btn btn-danger btn-small"
+                          onClick={() => ubahStatus(v.id, "Ditolak")}
+                        >
+                          Tolak
+                        </button>
+                        <button
+                          className="btn btn-primary btn-small"
+                          style={{ width: "auto" }}
+                          onClick={() => ubahStatus(v.id, "Diterima")}
+                        >
+                          Konfirmasi
+                        </button>
+                      </>
+                    ) : (
+                      <StatusBadge status={v.status} />
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="card empty">Belum ada data kunjungan.</div>
+          )}
+        </>
       )}
     </section>
   );

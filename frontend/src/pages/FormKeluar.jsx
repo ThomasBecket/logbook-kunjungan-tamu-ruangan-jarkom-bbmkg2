@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import SiteHeader from "../components/SiteHeader";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useToast } from "../context/ToastContext";
 import {
-  muatDataTamu,
-  simpanDataTamu,
-  waktuIsoSekarang,
-  formatTanggal,
+  catatKunjunganKeluar,
   ambilIdTerakhir,
   hapusIdTerakhir,
 } from "../api/storage";
 
 export default function FormKeluar() {
+  useDocumentTitle("Tamu Keluar — BBMKG Wilayah II");
   const tampilkanToast = useToast();
   const [idKunjungan, setIdKunjungan] = useState("");
   const [hasil, setHasil] = useState(null); // { nama, waktu } setelah berhasil
+  const [mengirim, setMengirim] = useState(false);
 
   useEffect(() => {
     const idTerakhir = ambilIdTerakhir();
@@ -24,29 +24,23 @@ export default function FormKeluar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function tanganiSubmit(e) {
+  async function tanganiSubmit(e) {
     e.preventDefault();
     const id = idKunjungan.trim().toUpperCase();
-    const daftarTamu = muatDataTamu();
-    const index = daftarTamu.findIndex((v) => v.id === id);
-    if (index === -1) {
-      tampilkanToast("Nomor kunjungan tidak ditemukan.");
-      return;
+
+    setMengirim(true);
+    try {
+      const kunjungan = await catatKunjunganKeluar(id);
+      hapusIdTerakhir();
+      setHasil({
+        nama: (kunjungan.namaTamu || []).join(", "),
+        waktu: kunjungan.waktuKeluar,
+      });
+    } catch (err) {
+      tampilkanToast(err.message);
+    } finally {
+      setMengirim(false);
     }
-    if (daftarTamu[index].status !== "Diterima") {
-      tampilkanToast("Tamu belum memiliki akses masuk yang disetujui.");
-      return;
-    }
-    const waktuKeluarIso = waktuIsoSekarang();
-    daftarTamu[index].status = "Kunjungan Selesai";
-    daftarTamu[index].waktuKeluarIso = waktuKeluarIso;
-    daftarTamu[index].waktuKeluar = formatTanggal(waktuKeluarIso);
-    simpanDataTamu(daftarTamu);
-    hapusIdTerakhir();
-    setHasil({
-      nama: (daftarTamu[index].namaTamu || []).join(", "),
-      waktu: daftarTamu[index].waktuKeluar,
-    });
   }
 
   return (
@@ -68,13 +62,13 @@ export default function FormKeluar() {
                 <input
                   id="idKunjungan"
                   required
-                  placeholder="Contoh: T-ABC123"
+                  placeholder="Contoh: 05092026-004"
                   value={idKunjungan}
                   onChange={(e) => setIdKunjungan(e.target.value)}
                 />
               </div>
-              <button className="btn btn-primary" type="submit">
-                Konfirmasi Keluar
+              <button className="btn btn-primary" type="submit" disabled={mengirim}>
+                {mengirim ? "MEMPROSES..." : "KONFIRMASI KELUAR"}
               </button>
             </form>
           )}

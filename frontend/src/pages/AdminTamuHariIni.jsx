@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { muatDataTamu } from "../api/storage";
 import StatusBadge from "../components/StatusBadge";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function AdminTamuHariIni() {
+  useDocumentTitle("Tamu Hari Ini — BBMKG Wilayah II");
   const [daftarTamu, setDaftarTamu] = useState([]);
 
   useEffect(() => {
-    setDaftarTamu(muatDataTamu());
+    muatDataTamu()
+      .then(setDaftarTamu)
+      .catch(() => setDaftarTamu([]));
   }, []);
 
   const labelHariIni = useMemo(
