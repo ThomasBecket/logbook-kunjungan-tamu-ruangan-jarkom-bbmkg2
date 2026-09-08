@@ -41,7 +41,7 @@ function ambilData7HariTerakhir(daftarTamu) {
 }
 
 export default function AdminDashboard() {
-  useDocumentTitle("Dashboard — BBMKG Wilayah II");
+  useDocumentTitle("Dashboard Admin — Ruangan Jarkom BBMKG Wilayah II");
   const [daftarTamu, setDaftarTamu] = useState([]);
 
   useEffect(() => {

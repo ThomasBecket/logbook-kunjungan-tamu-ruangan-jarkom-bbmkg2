@@ -6,7 +6,7 @@ import { useToast } from "../context/ToastContext";
 import { kirimKunjungan, simpanIdTerakhir } from "../api/storage";
 
 export default function FormMasuk() {
-  useDocumentTitle("Tamu Masuk — BBMKG Wilayah II");
+  useDocumentTitle("Form Masuk Tamu — Ruangan Jarkom BBMKG Wilayah II");
   const navigate = useNavigate();
   const tampilkanToast = useToast();
 

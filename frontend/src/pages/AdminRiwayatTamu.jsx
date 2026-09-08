@@ -71,7 +71,7 @@ function HeaderKalender({
 }
 
 export default function AdminRiwayatTamu() {
-  useDocumentTitle("Riwayat Tamu — BBMKG Wilayah II");
+  useDocumentTitle("Riwayat Tamu — Ruangan Jarkom BBMKG Wilayah II");
   const [daftarTamu, setDaftarTamu] = useState([]);
 
   // Filter rentang tanggal — sekarang pakai objek Date (bukan string),

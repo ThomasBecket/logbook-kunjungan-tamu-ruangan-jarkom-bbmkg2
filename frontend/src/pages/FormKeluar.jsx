@@ -9,7 +9,7 @@ import {
 } from "../api/storage";
 
 export default function FormKeluar() {
-  useDocumentTitle("Tamu Keluar — BBMKG Wilayah II");
+  useDocumentTitle("Form Keluar Tamu — Ruangan Jarkom BBMKG Wilayah II");
   const tampilkanToast = useToast();
   const [idKunjungan, setIdKunjungan] = useState("");
   const [hasil, setHasil] = useState(null); // { nama, waktu } setelah berhasil

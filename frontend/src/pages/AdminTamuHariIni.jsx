@@ -4,7 +4,7 @@ import StatusBadge from "../components/StatusBadge";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function AdminTamuHariIni() {
-  useDocumentTitle("Tamu Hari Ini — BBMKG Wilayah II");
+  useDocumentTitle("List Tamu Hari Ini — Ruangan Jarkom BBMKG Wilayah II");
   const [daftarTamu, setDaftarTamu] = useState([]);
 
   useEffect(() => {

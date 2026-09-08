@@ -15,7 +15,7 @@ export default function StatusKunjungan() {
   const [tidakDitemukan, setTidakDitemukan] = useState(false);
   const [tersalin, setTersalin] = useState(false);
 
-  useDocumentTitle(`Kunjungan ${id} — BBMKG Wilayah II`);
+  useDocumentTitle(`Status Kunjungan Tamu ${id} — Ruangan Jarkom BBMKG Wilayah II`);
 
   async function muatStatus() {
     setMemuat(true);

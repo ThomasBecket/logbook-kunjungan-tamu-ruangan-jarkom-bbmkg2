@@ -5,7 +5,7 @@ import StatusBadge from "../components/StatusBadge";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function AdminTamuMenunggu() {
-  useDocumentTitle("Tamu Menunggu — BBMKG Wilayah II");
+  useDocumentTitle("List Tamu Menunggu — Ruangan Jarkom BBMKG Wilayah II");
   const tampilkanToast = useToast();
   const [daftarTamu, setDaftarTamu] = useState([]);
   const [memuat, setMemuat] = useState(true);
