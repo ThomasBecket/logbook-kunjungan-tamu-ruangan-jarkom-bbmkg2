@@ -2,7 +2,8 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const routerPengunjung = require("./routes/pengunjungRoutes");
+const routerPengunjung = require("./routes/pengunjungRoute");
+const routerAdmin = require("./routes/adminRoute");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.get("/api/ping", (req, res) => {
 });
 
 app.use("/api/pengunjung", routerPengunjung);
+app.use("/api/admin", routerAdmin);
 
 // Fallback kalau ada route yang tidak dikenali
 app.use((req, res) => {

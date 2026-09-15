@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useToast } from "../context/ToastContext";
+import { gantiPassword } from "../api/adminApi";
 
 export default function GantiPasswordModal({ onClose }) {
   const tampilkanToast = useToast();
   const [passwordLama, setPasswordLama] = useState("");
   const [passwordBaru, setPasswordBaru] = useState("");
   const [konfirmasiPassword, setKonfirmasiPassword] = useState("");
+  const [mengirim, setMengirim] = useState(false);
 
-  function tanganiSubmit(e) {
+  async function tanganiSubmit(e) {
     e.preventDefault();
     if (passwordBaru.length < 6) {
       tampilkanToast("Password baru minimal 6 karakter.");
@@ -17,11 +19,17 @@ export default function GantiPasswordModal({ onClose }) {
       tampilkanToast("Konfirmasi password tidak cocok.");
       return;
     }
-    // TODO: ganti dengan panggilan ke backend, misal:
-    // await axios.post("/api/admin/ganti-password", { passwordLama, passwordBaru })
-    // Backend yang verifikasi passwordLama & hash passwordBaru sebelum simpan.
-    tampilkanToast("Password berhasil diganti (demo, belum tersambung backend).");
-    onClose();
+
+    setMengirim(true);
+    try {
+      await gantiPassword({ passwordLama, passwordBaru });
+      tampilkanToast("Password berhasil diganti.");
+      onClose();
+    } catch (err) {
+      tampilkanToast(err.message);
+    } finally {
+      setMengirim(false);
+    }
   }
 
   return (
@@ -63,8 +71,13 @@ export default function GantiPasswordModal({ onClose }) {
             <button type="button" className="btn btn-secondary" onClick={onClose}>
               Batal
             </button>
-            <button type="submit" className="btn btn-primary" style={{ width: "auto" }}>
-              Simpan
+            <button
+              type="submit"
+              className="btn btn-primary"
+              style={{ width: "auto" }}
+              disabled={mengirim}
+            >
+              {mengirim ? "MENYIMPAN..." : "Simpan"}
             </button>
           </div>
         </form>

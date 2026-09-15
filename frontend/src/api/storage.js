@@ -22,7 +22,8 @@ export async function muatDataTamu() {
 }
 
 // POST /api/pengunjung — tamu masuk submit data baru
-// Mengembalikan objek kunjungan lengkap dari backend
+// Mengembalikan objek kunjungan lengkap dari backend (termasuk id asli
+// format DDMMYYYY-NNN yang digenerate server, bukan lagi "T-xxxxx").
 export async function kirimKunjungan({ namaTamu, unitKerja, keperluan }) {
   try {
     const res = await api.post("/pengunjung", { namaTamu, unitKerja, keperluan });
@@ -43,6 +44,8 @@ export async function cekStatusKunjungan(id) {
 }
 
 // PATCH /api/pengunjung/:id/status — admin approve/reject
+// Nama petugas yang memverifikasi otomatis diisi backend dari token JWT
+// (siapa yang sedang login), tidak dikirim dari sini.
 export async function ubahStatusKunjungan(id, status) {
   try {
     const res = await api.patch(`/pengunjung/${id}/status`, { status });

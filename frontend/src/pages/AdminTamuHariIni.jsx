@@ -4,7 +4,7 @@ import StatusBadge from "../components/StatusBadge";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function AdminTamuHariIni() {
-  useDocumentTitle("List Tamu Hari Ini — Ruangan Jarkom BBMKG Wilayah II");
+  useDocumentTitle("Tamu Hari Ini — BBMKG Wilayah II");
   const [daftarTamu, setDaftarTamu] = useState([]);
 
   useEffect(() => {
@@ -44,21 +44,35 @@ export default function AdminTamuHariIni() {
       </div>
 
       {tamuHariIni.length ? (
-        <div className="visitor-list">
-          {tamuHariIni.map((v) => (
-            <div className="card visitor-row" key={v.id}>
-              <div className="vinfo">
-                <strong>{(v.namaTamu || []).join(", ")}</strong>
-                <small>
-                  {v.unitKerja} • {v.keperluan}
-                </small>
-              </div>
-              <div className="vtime">{v.waktuMasuk}</div>
-              <div className="vactions">
-                <StatusBadge status={v.status} />
-              </div>
-            </div>
-          ))}
+        <div className="table-wrapper">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>ID Kunjungan</th>
+                <th>Nama Tamu</th>
+                <th>Unit Kerja / Instansi</th>
+                <th>Keperluan</th>
+                <th>Waktu Masuk</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tamuHariIni.map((v, index) => (
+                <tr key={v.id}>
+                  <td className="col-no">{index + 1}</td>
+                  <td className="col-id">{v.id}</td>
+                  <td>{(v.namaTamu || []).join(", ")}</td>
+                  <td>{v.unitKerja}</td>
+                  <td>{v.keperluan}</td>
+                  <td>{v.waktuMasuk}</td>
+                  <td>
+                    <StatusBadge status={v.status} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       ) : (
         <div className="card empty">Belum ada tamu hari ini.</div>

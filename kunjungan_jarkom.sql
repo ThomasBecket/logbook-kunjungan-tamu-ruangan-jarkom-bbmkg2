@@ -1,9 +1,15 @@
 -- =========================================================
--- kunjungan_jarkom — skema revisi
--- Perubahan dari versi awal:
+-- kunjungan_jarkom
+-- Riwayat revisi:
 --   1. Tabel `pengunjung`: tambah kolom `status`, `waktu_keluar` jadi NULLable
 --   2. Tabel baru `pengunjung_nama`: relasi 1-ke-banyak untuk tamu rombongan
---   3. Tabel `admin`: id_admin jadi AUTO_INCREMENT
+--   3. Tabel baru `nomor_kunjungan`: generator id_pengunjung format DDMMYYYY-NNN
+--   4. Tabel `pengunjung`: tambah kolom `nama_petugas_verifikasi`
+--      (mencatat petugas yang approve/reject kunjungan)
+--   5. Tabel `admin`: id_admin jadi VARCHAR(3) (001, 002, dst — tanpa
+--      AUTO_INCREMENT, slot yang dihapus akan dipakai ulang oleh admin
+--      berikutnya), tambah kolom `role` ('utama' / 'petugas') dan
+--      `status` ('Menunggu Persetujuan' / 'Diterima' / 'Ditolak')
 -- =========================================================
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -13,11 +19,34 @@ SET NAMES utf8mb4;
 
 -- --------------------------------------------------------
 -- Tabel: admin
+-- id_admin format 3 digit ("001", "002", dst), di-generate manual oleh
+-- backend (lihat models/adminModel.js -> cariIdBerikutnya()), BUKAN
+-- AUTO_INCREMENT — supaya slot yang kosong (admin dihapus) bisa dipakai
+-- ulang oleh admin yang dibuat berikutnya.
+--
+-- role:   'utama'   -> cuma bisa approve/reject admin baru, TIDAK bisa
+--                      approve/reject kunjungan tamu (lihat saja)
+--         'petugas' -> approve/reject kunjungan tamu seperti biasa,
+--                      TIDAK bisa approve/reject admin baru
+--
+-- status: 'Menunggu Persetujuan' -> baru daftar, belum bisa login
+--         'Diterima'             -> sudah disetujui admin utama, bisa login
+--         'Ditolak'              -> pendaftaran ditolak, tidak bisa login
+--
+-- Admin PERTAMA (id_admin = '001', role = 'utama') wajib dibuat manual
+-- lewat phpMyAdmin, karena belum ada admin utama yang bisa approve dia.
+-- Gunakan hashPassword.js untuk generate hash bcrypt-nya, contoh:
+--
+--   INSERT INTO admin (id_admin, username, password, nama_petugas, role, status)
+--   VALUES ('001', 'admin', '$2b$10$...hasil_hash_bcrypt...', 'Nama Anda', 'utama', 'Diterima');
 -- --------------------------------------------------------
 CREATE TABLE `admin` (
-  `id_admin` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_admin` VARCHAR(3) NOT NULL,               -- contoh: 001, 002, 003
   `username` VARCHAR(255) NOT NULL,
-  `password` VARCHAR(255) NOT NULL,  -- simpan hash bcrypt, jangan plaintext
+  `password` VARCHAR(255) NOT NULL,             -- simpan hash bcrypt, jangan plaintext
+  `nama_petugas` VARCHAR(255) NOT NULL,
+  `role` VARCHAR(20) NOT NULL DEFAULT 'petugas',       -- 'utama' | 'petugas'
+  `status` VARCHAR(30) NOT NULL DEFAULT 'Menunggu Persetujuan',    -- 'Menunggu Persetujuan' | 'Diterima' | 'Ditolak'
   PRIMARY KEY (`id_admin`),
   UNIQUE KEY `uq_username` (`username`)
 );
@@ -31,6 +60,7 @@ CREATE TABLE `pengunjung` (
   `unit_kerja_instansi` VARCHAR(255) NOT NULL,
   `keperluan` TEXT NOT NULL,
   `status` VARCHAR(30) NOT NULL DEFAULT 'Menunggu Persetujuan',
+  `nama_petugas_verifikasi` VARCHAR(255) NULL DEFAULT NULL, -- diisi otomatis dari sesi login saat approve/reject
   `waktu_masuk` DATETIME NOT NULL,
   `waktu_keluar` DATETIME NULL DEFAULT NULL,     -- baru terisi saat tamu keluar
   PRIMARY KEY (`id_pengunjung`)

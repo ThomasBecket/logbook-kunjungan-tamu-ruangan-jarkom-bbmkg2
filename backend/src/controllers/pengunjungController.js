@@ -61,17 +61,25 @@ async function ambilKunjungan(req, res) {
   }
 }
 
-// PATCH /api/pengunjung/:id/status — admin approve/reject
+// PATCH /api/pengunjung/:id/status — admin approve/reject (WAJIB sudah login)
 async function ubahStatusKunjungan(req, res) {
   try {
     const { id } = req.params;
     const { status } = req.body;
+    const { namaPetugas } = req.admin; // dari token JWT, bukan diketik manual
+
+    if (!namaPetugas) {
+      return res.status(401).json({
+        error: "Sesi Anda tidak lengkap (kemungkinan sesi lama). Silakan logout dan login ulang.",
+      });
+    }
+
     const statusDiizinkan = ["Diterima", "Ditolak"];
     if (!statusDiizinkan.includes(status)) {
       return res.status(400).json({ error: "Status tidak valid." });
     }
 
-    const berhasil = await PengunjungModel.ubahStatus(id, status);
+    const berhasil = await PengunjungModel.ubahStatus(id, status, namaPetugas);
     if (!berhasil) {
       return res.status(404).json({ error: "Nomor kunjungan tidak ditemukan." });
     }

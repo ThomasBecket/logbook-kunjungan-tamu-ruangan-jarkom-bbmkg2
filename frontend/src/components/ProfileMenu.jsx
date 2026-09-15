@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAutentikasiAdmin } from "../context/AutentikasiAdminContext";
 import { useToast } from "../context/ToastContext";
 import GantiPasswordModal from "./GantiPasswordModal";
 
 export default function ProfileMenu() {
+  const { admin, logout } = useAutentikasiAdmin();
   const [menuTerbuka, setMenuTerbuka] = useState(false);
   const [tampilkanModal, setTampilkanModal] = useState(false);
   const menuRef = useRef(null);
@@ -22,10 +24,9 @@ export default function ProfileMenu() {
 
   function tanganiLogout() {
     setMenuTerbuka(false);
-    // TODO: setelah backend auth siap, hapus token/session di sini
-    // (misal: localStorage.removeItem("token")) sebelum redirect.
+    logout();
     tampilkanToast("Anda telah logout.");
-    navigate("/form-masuk");
+    navigate("/login");
   }
 
   return (
@@ -56,10 +57,18 @@ export default function ProfileMenu() {
         className="profile-trigger"
         onClick={() => setMenuTerbuka((v) => !v)}
       >
-        <div className="profile-avatar">P</div>
+        <div className="profile-avatar">
+          {(admin?.namaPetugas || "P").charAt(0).toUpperCase()}
+        </div>
         <div className="profile-info">
-          <strong>Petugas</strong>
-          <span>Lihat pengaturan</span>
+
+
+          <strong>{admin?.namaPetugas || "Petugas"}</strong>
+
+          {/* Kalo mau nampilin usernamenya juga yang dibawah tinggal nyalain */}
+          
+          {/* <span>@{admin?.username || "-"}</span> */}
+
         </div>
       </button>
 

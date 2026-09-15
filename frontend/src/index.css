@@ -100,6 +100,7 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   text-transform: uppercase; letter-spacing: .02em;
 }
 .btn:hover:not(:disabled) { transform: translateY(-1.5px); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
 .btn-primary { width: 100%; color: #fff; background: var(--primary); }
 .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 8px 20px rgba(28,78,148,.3); }
 .btn-secondary { background: var(--info-bg); color: var(--info); }
@@ -337,6 +338,46 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;
 }
 
+/* ===== Modal Peraturan & Tata Tertib (Form Masuk) ===== */
+.peraturan-card {
+  width: min(520px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+}
+.peraturan-list {
+  margin: 18px 0;
+  padding-left: 22px;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.85;
+}
+.peraturan-list li { margin-bottom: 6px; }
+.peraturan-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 18px 0;
+  padding: 14px 16px;
+  background: var(--bg);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+}
+.peraturan-checkbox input {
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+.modal-actions {
+  display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;
+}
+
 /* ===== Dashboard: grid chart ===== */
 .chart-grid {
   display: grid;
@@ -419,6 +460,62 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   padding: 16px 24px; font-size: 14.5px;
 }
 .btn-download-excel:hover { background: #17803f; }
+
+/* ===== Tabel data (Tamu Menunggu, Riwayat Tamu, Tamu Hari Ini) ===== */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.data-table thead th {
+  text-align: left;
+  padding: 14px 18px;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+}
+.data-table tbody td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  color: var(--text);
+  white-space: normal;
+}
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background: var(--bg); }
+.data-table td.col-no {
+  width: 1%;
+  color: var(--muted);
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+.data-table td.col-id {
+  font-weight: 700;
+  color: var(--primary);
+  white-space: nowrap;
+}
+.data-table .status-cell { display: flex; gap: 8px; white-space: nowrap; }
+
+/* ===== Untuk tampilan info nama petugas yang memverifikasi ===== */
+.nama-petugas-verifikasi {
+  display: inline-block;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 8px;
+}
 
 @media (max-width: 720px) {
   .filter-bar { flex-direction: column; align-items: stretch; }

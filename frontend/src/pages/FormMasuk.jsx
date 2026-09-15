@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
+import PeraturanModal from "../components/PeraturanModal";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useToast } from "../context/ToastContext";
 import { kirimKunjungan, simpanIdTerakhir } from "../api/storage";
 
 export default function FormMasuk() {
-  useDocumentTitle("Form Masuk Tamu — Ruangan Jarkom BBMKG Wilayah II");
+  useDocumentTitle("Tamu Masuk — BBMKG Wilayah II");
   const navigate = useNavigate();
   const tampilkanToast = useToast();
 
+  const [sudahSetuju, setSudahSetuju] = useState(false);
   const [namaTamu, setNamaTamu] = useState([""]);
   const [unitKerja, setUnitKerja] = useState("");
   const [keperluan, setKeperluan] = useState("");
@@ -121,6 +123,8 @@ export default function FormMasuk() {
           </form>
         </section>
       </main>
+
+      {!sudahSetuju && <PeraturanModal onSetuju={() => setSudahSetuju(true)} />}
     </>
   );
 }

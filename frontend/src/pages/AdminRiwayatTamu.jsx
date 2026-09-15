@@ -71,7 +71,7 @@ function HeaderKalender({
 }
 
 export default function AdminRiwayatTamu() {
-  useDocumentTitle("Riwayat Tamu — Ruangan Jarkom BBMKG Wilayah II");
+  useDocumentTitle("Riwayat Tamu — BBMKG Wilayah II");
   const [daftarTamu, setDaftarTamu] = useState([]);
 
   // Filter rentang tanggal — sekarang pakai objek Date (bukan string),
@@ -257,29 +257,43 @@ export default function AdminRiwayatTamu() {
       </p>
 
       {dataDitampilkan.length ? (
-        <div className="visitor-list">
-          {dataDitampilkan.map((v) => (
-            <div className="card visitor-row" key={v.id}>
-              <div className="vinfo">
-                <strong>{(v.namaTamu || []).join(", ")}</strong>
-                <small>
-                  {v.unitKerja} • {v.keperluan}
-                </small>
-              </div>
-              <div className="vtime">
-                Masuk: {v.waktuMasuk}
-                {v.waktuKeluar && (
-                  <>
-                    <br />
-                    Keluar: {v.waktuKeluar}
-                  </>
-                )}
-              </div>
-              <div className="vactions">
-                <StatusBadge status={v.status} />
-              </div>
-            </div>
-          ))}
+        <div className="table-wrapper">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>ID Kunjungan</th>
+                <th>Nama Tamu</th>
+                <th>Unit Kerja / Instansi</th>
+                <th>Keperluan</th>
+                <th>Waktu Masuk</th>
+                <th>Waktu Keluar</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataDitampilkan.map((v, index) => {
+                const nomorUrut =
+                  ukuranHalaman === "semua"
+                    ? index + 1
+                    : (halamanAktif - 1) * ukuranHalaman + index + 1;
+                return (
+                  <tr key={v.id}>
+                    <td className="col-no">{nomorUrut}</td>
+                    <td className="col-id">{v.id}</td>
+                    <td>{(v.namaTamu || []).join(", ")}</td>
+                    <td>{v.unitKerja}</td>
+                    <td>{v.keperluan}</td>
+                    <td>{v.waktuMasuk}</td>
+                    <td>{v.waktuKeluar || "-"}</td>
+                    <td>
+                      <StatusBadge status={v.status} />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       ) : (
         <div className="card empty">Tidak ada data untuk filter ini.</div>
