@@ -3,6 +3,7 @@ import { useToast } from "../context/ToastContext";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { ambilSemuaAdmin, hapusAdmin } from "../api/admin";
 import TambahAdminModal from "../components/TambahAdminModal";
+import KonfirmasiHapusAdminModal from "../components/KonfirmasiHapusAdminModal";
 
 export default function AdminListPetugasAdmin() {
   useDocumentTitle("List Petugas Admin — BBMKG Wilayah II");
@@ -12,6 +13,8 @@ export default function AdminListPetugasAdmin() {
   const [memuat, setMemuat] = useState(true);
   const [pesanGagal, setPesanGagal] = useState("");
   const [tampilkanModal, setTampilkanModal] = useState(false);
+  const [adminYangDihapus, setAdminYangDihapus] = useState(null);
+  const [menghapus, setMenghapus] = useState(false);
 
   async function muatUlang() {
     try {
@@ -29,18 +32,27 @@ export default function AdminListPetugasAdmin() {
     muatUlang();
   }, []);
 
-  async function tanganiHapus(id, nama) {
-    const yakin = window.confirm(
-      `Hapus akses admin "${nama}"? Tindakan ini tidak bisa dibatalkan.`
-    );
-    if (!yakin) return;
+  function tanganiHapus(id, nama) {
+    setAdminYangDihapus({
+      id,
+      nama,
+      });
+    }
+
+  async function konfirmasiHapus() {
+  if (!adminYangDihapus) return;
+
+  setMenghapus(true);
 
     try {
-      await hapusAdmin(id);
+      await hapusAdmin(adminYangDihapus.id);
       tampilkanToast("Akses admin berhasil dihapus.");
-      muatUlang();
+      setAdminYangDihapus(null);
+      await muatUlang();
     } catch (err) {
       tampilkanToast(err.message);
+    } finally {
+      setMenghapus(false);
     }
   }
 
@@ -56,11 +68,11 @@ export default function AdminListPetugasAdmin() {
         </div>
         <button
           type="button"
-          className="btn btn-primary btn-small"
+          className="btn btn-primary btn-small btn-tambah-admin"
           style={{ width: "auto" }}
           onClick={() => setTampilkanModal(true)}
         >
-          + Tambah Admin
+          Tambah Admin
         </button>
       </div>
 
@@ -85,7 +97,7 @@ export default function AdminListPetugasAdmin() {
                     <td className="col-id">{a.id_admin}</td>
                     <td>{a.nama_petugas}</td>
                     <td>
-                      {a.id_admin === "001" ? (
+                      {a.role === "utama" ? (
                         <span className="badge ok">Admin Utama</span>
                       ) : (
                         <button
@@ -111,6 +123,14 @@ export default function AdminListPetugasAdmin() {
           onBerhasil={muatUlang}
         />
       )}
+
+      <KonfirmasiHapusAdminModal
+      admin={adminYangDihapus}
+      menghapus={menghapus}
+      onClose={() => setAdminYangDihapus(null)}
+      onConfirm={konfirmasiHapus}
+      />
+
     </section>
   );
 }

@@ -338,6 +338,61 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;
 }
 
+/* ===== Modal (Konfirmasi Tambah Admin Petugas) ===== */
+.modal-overlay-konfirmasi {
+  z-index: 1001;
+}
+
+.modal-konfirmasi {
+  width: min(420px, calc(100vw - 32px));
+}
+
+.konfirmasi-text {
+  margin: 8px 0 20px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.konfirmasi-data {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f9fafb;
+}
+
+.konfirmasi-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.konfirmasi-item:last-child {
+  border-bottom: none;
+}
+
+.konfirmasi-item span {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.konfirmasi-item strong {
+  color: #111827;
+  font-size: 14px;
+  text-align: right;
+  word-break: break-word;
+}
+
+.modal-konfirmasi .modal-actions {
+  margin-top: 0;
+}
+
 /* ===== Modal Peraturan & Tata Tertib (Form Masuk) ===== */
 .peraturan-card {
   width: min(520px, 100%);
@@ -454,12 +509,20 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
 }
 .pagination button:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 
-/* ===== Riwayat: tombol Unduh Excel ===== */
+/* ===== Riwayat Tamu: Tombol Unduh Excel ===== */
 .btn-download-excel {
   width: auto; background: var(--success); color: #fff;
   padding: 16px 24px; font-size: 14.5px;
 }
 .btn-download-excel:hover { background: #17803f; }
+
+/* ===== List Petugas Admin: Tombol Tambah Admin ===== */
+.btn-tambah-admin {
+  min-width: 180px;
+  min-height: 50px;
+  padding: 10px 20px;
+  font-size: 15px;
+}
 
 /* ===== Tabel data (Tamu Menunggu, Riwayat Tamu, Tamu Hari Ini) ===== */
 .table-wrapper {
