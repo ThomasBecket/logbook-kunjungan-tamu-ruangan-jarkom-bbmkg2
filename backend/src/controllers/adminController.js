@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const AdminModel = require("../models/adminModel");
 
-// POST /api/adminApi/login — login, kembalikan JWT token
+// POST /api/admin/login — login, kembalikan JWT token
 async function login(req, res) {
   try {
     const { username, password } = req.body;
@@ -15,15 +15,6 @@ async function login(req, res) {
     const admin = await AdminModel.cariByUsername(username.trim());
     if (!admin) {
       return res.status(401).json({ error: "Username atau password salah." });
-    }
-
-    if (admin.status === "Menunggu Persetujuan") {
-      return res
-        .status(403)
-        .json({ error: "Akun Anda masih menunggu persetujuan admin utama." });
-    }
-    if (admin.status === "Ditolak") {
-      return res.status(403).json({ error: "Pendaftaran akun Anda ditolak." });
     }
 
     const cocok = await bcrypt.compare(password, admin.password);
@@ -47,10 +38,8 @@ async function login(req, res) {
   }
 }
 
-// POST /api/adminApi/daftar — ajukan akun admin baru (WAJIB sudah login,
-// tapi akun baru ini statusnya "Menunggu Persetujuan" — belum bisa
-// dipakai login sampai disetujui admin utama)
-async function daftarAdmin(req, res) {
+// POST /api/admin/tambah — tambah akun admin baru (HANYA admin utama)
+async function tambahAdmin(req, res) {
   try {
     const { username, password, namaPetugas } = req.body;
 
@@ -82,46 +71,51 @@ async function daftarAdmin(req, res) {
     res.status(201).json(admin);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Gagal mendaftarkan admin." });
+    res.status(500).json({ error: "Gagal menambahkan admin." });
   }
 }
 
-// GET /api/adminApi/menunggu — daftar admin yang menunggu persetujuan
-// (HANYA admin utama)
-async function ambilAdminMenunggu(req, res) {
+// GET /api/admin/semua — mengambil seluruh admin (HANYA admin utama)
+async function ambilSemuaAdmin(req, res) {
   try {
-    const daftar = await AdminModel.cariSemuaMenunggu();
+    const daftar = await AdminModel.cariSemuaAdmin();
     res.json(daftar);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Gagal mengambil data." });
+    res.status(500).json({ error: "Gagal mengambil data admin." });
   }
 }
 
-// PATCH /api/adminApi/:id/status — setujui/tolak admin baru (HANYA admin utama)
-async function ubahStatusAdmin(req, res) {
+// DELETE /api/admin/:id — hapus akses admin petugas (HANYA admin utama)
+async function hapusAdmin(req, res) {
   try {
     const { id } = req.params;
-    const { status } = req.body;
 
-    const statusDiizinkan = ["Diterima", "Ditolak"];
-    if (!statusDiizinkan.includes(status)) {
-      return res.status(400).json({ error: "Status tidak valid." });
+    const admin = await AdminModel.cariSemuaAdmin();
+    const dataAdmin = admin.find((a) => a.id_admin === id);
+
+    if (!dataAdmin) {
+      return res.status(404).json({ error: "Admin tidak ditemukan." });
     }
 
-    const berhasil = await AdminModel.ubahStatusAdmin(id, status);
+    if (dataAdmin.role === "utama") {
+      return res.status(403).json({ error: "Admin utama tidak dapat dihapus." });
+    }
+
+    const berhasil = await AdminModel.hapusAdmin(id);
+
     if (!berhasil) {
       return res.status(404).json({ error: "Admin tidak ditemukan." });
     }
 
-    res.json({ message: `Admin ${id} berhasil di-${status.toLowerCase()}.` });
+    res.json({ message: "Akses admin berhasil dihapus." });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Gagal mengubah status admin." });
+    res.status(500).json({ error: "Gagal menghapus admin." });
   }
 }
 
-// PATCH /api/adminApi/ganti-password — ganti password (WAJIB sudah login)
+// PATCH /api/admin/ganti-password — ganti password (WAJIB sudah login)
 async function gantiPassword(req, res) {
   try {
     const { passwordLama, passwordBaru } = req.body;
@@ -151,16 +145,17 @@ async function gantiPassword(req, res) {
   }
 }
 
-// GET /api/adminApi/saya — verifikasi sesi + ambil data admin TERBARU dari
+// GET /api/admin/saya — verifikasi sesi + ambil data admin TERBARU dari
 // database (bukan cuma dari isi token lama). Dipanggil frontend setiap kali
 // halaman admin dibuka/di-refresh, supaya token basi atau server yang
 // baru restart tidak dianggap "masih login" begitu saja.
 async function ambilSaya(req, res) {
   try {
     const admin = await AdminModel.cariByUsername(req.admin.username);
-    if (!admin || admin.status !== "Diterima") {
+    if (!admin) {
       return res.status(401).json({ error: "Sesi tidak valid, silakan login ulang." });
     }
+
     res.json({
       id: admin.id_admin,
       username: admin.username,
@@ -175,9 +170,9 @@ async function ambilSaya(req, res) {
 
 module.exports = {
   login,
-  daftarAdmin,
-  ambilAdminMenunggu,
-  ubahStatusAdmin,
+  tambahAdmin,
+  ambilSemuaAdmin,
+  hapusAdmin,
   gantiPassword,
   ambilSaya,
 };

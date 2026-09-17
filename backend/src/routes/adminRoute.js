@@ -1,19 +1,23 @@
 // routes/adminRoute.js
+
 const express = require("express");
+
 const router = express.Router();
+
 const adminController = require("../controllers/adminController");
+
 const { verifikasiToken, hanyaUtama } = require("../middleware/autentikasi");
 
-// Publik — belum login
+// Untuk akses fungsi login
 router.post("/login", adminController.login);
 
-// Wajib sudah login (siapa saja boleh mengajukan admin baru)
+// Untuk akses fungsi data admin dan perubahan password setelah login (Wajib sudah login)
 router.get("/saya", verifikasiToken, adminController.ambilSaya);
-router.post("/daftar", verifikasiToken, adminController.daftarAdmin);
 router.patch("/ganti-password", verifikasiToken, adminController.gantiPassword);
 
-// Wajib sudah login DAN role "utama"
-router.get("/menunggu", verifikasiToken, hanyaUtama, adminController.ambilAdminMenunggu);
-router.patch("/:id/status", verifikasiToken, hanyaUtama, adminController.ubahStatusAdmin);
+// Untuk akses fungsi pengelolaan admin yang hanya dapat dilakukan oleh Admin Utama (Wajib sudah login sebagai Admin Utama)
+router.get("/semua", verifikasiToken, hanyaUtama, adminController.ambilSemuaAdmin);
+router.post("/tambah", verifikasiToken, hanyaUtama, adminController.tambahAdmin);
+router.delete("/:id", verifikasiToken, hanyaUtama, adminController.hapusAdmin);
 
 module.exports = router;

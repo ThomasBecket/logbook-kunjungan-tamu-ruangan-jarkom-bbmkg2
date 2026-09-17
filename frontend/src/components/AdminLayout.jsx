@@ -4,14 +4,12 @@ import ProfileMenu from "./ProfileMenu";
 
 const NAV_ITEMS = [
   { to: "/admin", label: "Dashboard", end: true },
+  
   { to: "/admin/admin-tamu-menunggu", label: "Tamu Menunggu" },
   { to: "/admin/admin-riwayat-tamu", label: "Riwayat Tamu" },
   { to: "/admin/admin-tamu-hari-ini", label: "Tamu Hari Ini" },
-  {
-    to: "/admin/admin-terima-admin-baru",
-    label: "Terima Admin Baru",
-    hanyaUtama: true,
-  }
+
+  { to: "/admin/admin-list-petugas-admin", label: "List Petugas Admin", hanyaUtama: true}
 ];
 
 export default function AdminLayout() {

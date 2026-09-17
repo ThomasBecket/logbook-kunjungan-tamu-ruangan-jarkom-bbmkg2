@@ -3,7 +3,7 @@ const pool = require("../database");
 
 async function cariByUsername(username) {
   const [baris] = await pool.query(
-    `SELECT id_admin, username, password, nama_petugas, role, status FROM admin WHERE username = ?`,
+    `SELECT id_admin, username, password, nama_petugas, role FROM admin WHERE username = ?`,
     [username]
   );
   return baris.length ? baris[0] : null;
@@ -29,8 +29,8 @@ async function cariIdBerikutnya() {
   return String(n).padStart(3, "0");
 }
 
-// Admin baru selalu dibuat dengan status "Menunggu Persetujuan" dan role
-// "petugas" — baru aktif (bisa login) setelah disetujui admin utama.
+// Admin baru hanya dibuat oleh admin utama dan langsung mendapatkan role
+// "petugas" tanpa melalui proses pendaftaran atau persetujuan.
 async function buat({ username, passwordHash, namaPetugas }) {
   // Retry beberapa kali kalau ID kebetulan bentrok (jarang terjadi,
   // cuma jaga-jaga kalau ada 2 admin dibuat nyaris bersamaan).
@@ -38,11 +38,11 @@ async function buat({ username, passwordHash, namaPetugas }) {
     const id = await cariIdBerikutnya();
     try {
       await pool.query(
-        `INSERT INTO admin (id_admin, username, password, nama_petugas, role, status)
-         VALUES (?, ?, ?, ?, 'petugas', 'Menunggu Persetujuan')`,
+        `INSERT INTO admin (id_admin, username, password, nama_petugas, role)
+         VALUES (?, ?, ?, ?, 'petugas')`,
         [id, username, passwordHash, namaPetugas]
       );
-      return { id, username, namaPetugas, role: "petugas", status: "Menunggu Persetujuan" };
+      return { id, username, namaPetugas, role: "petugas" };
     } catch (err) {
       if (err.code === "ER_DUP_ENTRY") continue; // coba id berikutnya
       throw err;
@@ -51,18 +51,21 @@ async function buat({ username, passwordHash, namaPetugas }) {
   throw new Error("Gagal generate id_admin, coba lagi.");
 }
 
-async function cariSemuaMenunggu() {
+// Mengambil seluruh data admin untuk ditampilkan oleh admin utama.
+async function cariSemuaAdmin() {
   const [baris] = await pool.query(
-    `SELECT id_admin, username, nama_petugas, status
-     FROM admin WHERE status = 'Menunggu Persetujuan' ORDER BY id_admin ASC`
+    `SELECT id_admin, username, nama_petugas, role
+     FROM admin
+     ORDER BY id_admin ASC`
   );
   return baris;
 }
 
-async function ubahStatusAdmin(id, status) {
+// Menghapus akun admin berdasarkan id_admin.
+async function hapusAdmin(id) {
   const [hasil] = await pool.query(
-    `UPDATE admin SET status = ? WHERE id_admin = ?`,
-    [status, id]
+    `DELETE FROM admin WHERE id_admin = ?`,
+    [id]
   );
   return hasil.affectedRows > 0;
 }
@@ -71,6 +74,6 @@ module.exports = {
   cariByUsername,
   buat,
   updatePassword,
-  cariSemuaMenunggu,
-  ubahStatusAdmin,
+  cariSemuaAdmin,
+  hapusAdmin,
 };

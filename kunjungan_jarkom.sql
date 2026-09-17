@@ -46,7 +46,6 @@ CREATE TABLE `admin` (
   `password` VARCHAR(255) NOT NULL,             -- simpan hash bcrypt, jangan plaintext
   `nama_petugas` VARCHAR(255) NOT NULL,
   `role` VARCHAR(20) NOT NULL DEFAULT 'petugas',       -- 'utama' | 'petugas'
-  `status` VARCHAR(30) NOT NULL DEFAULT 'Menunggu Persetujuan',    -- 'Menunggu Persetujuan' | 'Diterima' | 'Ditolak'
   PRIMARY KEY (`id_admin`),
   UNIQUE KEY `uq_username` (`username`)
 );

@@ -1,7 +1,10 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ToastProvider } from "./context/ToastContext";
 import { AutentikasiProvider } from "./context/AutentikasiAdminContext";
+
 import ProtectedRoute from "./components/ProteksiRute";
+import AdminLayout from "./components/AdminLayout";
+
 import FormMasuk from "./pages/FormMasuk";
 import FormKeluar from "./pages/FormKeluar";
 import StatusKunjungan from "./pages/StatusKunjungan";
@@ -10,8 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminTamuMenunggu from "./pages/AdminTamuMenunggu";
 import AdminRiwayatTamu from "./pages/AdminRiwayatTamu";
 import AdminTamuHariIni from "./pages/AdminTamuHariIni";
-import AdminTambahAdmin from "./pages/AdminTerimaAdminBaru";
-import AdminLayout from "./components/AdminLayout";
+import AdminListPetugasAdmin from "./pages/AdminListPetugasAdmin";
 
 export default function App() {
   return (
@@ -35,10 +37,12 @@ export default function App() {
               }
             >
               <Route index element={<AdminDashboard />} />
+              
               <Route path="admin-tamu-menunggu" element={<AdminTamuMenunggu />} />
               <Route path="admin-riwayat-tamu" element={<AdminRiwayatTamu />} />
               <Route path="admin-tamu-hari-ini" element={<AdminTamuHariIni />} />
-              <Route path="admin-terima-admin-baru" element={<AdminTambahAdmin />} />
+
+              <Route path="admin-list-petugas-admin" element={<AdminListPetugasAdmin />} />
             </Route>
 
           </Routes>

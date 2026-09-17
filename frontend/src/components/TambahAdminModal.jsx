@@ -1,29 +1,35 @@
 import { useState } from "react";
 import { useToast } from "../context/ToastContext";
-import { gantiPassword } from "../api/admin";
+import { tambahAdmin } from "../api/admin";
 
-export default function GantiPasswordModal({ onClose }) {
+export default function TambahAdminModal({ onClose, onBerhasil }) {
   const tampilkanToast = useToast();
-  const [passwordLama, setPasswordLama] = useState("");
-  const [passwordBaru, setPasswordBaru] = useState("");
+  const [namaPetugas, setNamaPetugas] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [konfirmasiPassword, setKonfirmasiPassword] = useState("");
   const [mengirim, setMengirim] = useState(false);
 
   async function tanganiSubmit(e) {
     e.preventDefault();
-    if (passwordBaru.length < 6) {
-      tampilkanToast("Password baru minimal 6 karakter.");
+    if (password.length < 6) {
+      tampilkanToast("Password minimal 6 karakter.");
       return;
     }
-    if (passwordBaru !== konfirmasiPassword) {
+    if (password !== konfirmasiPassword) {
       tampilkanToast("Konfirmasi password tidak cocok.");
       return;
     }
 
     setMengirim(true);
     try {
-      await gantiPassword({ passwordLama, passwordBaru });
-      tampilkanToast("Password berhasil diganti.");
+      await tambahAdmin({
+        username: username.trim(),
+        password,
+        namaPetugas: namaPetugas.trim(),
+      });
+      tampilkanToast("Admin baru berhasil ditambahkan.");
+      onBerhasil();
       onClose();
     } catch (err) {
       tampilkanToast(err.message);
@@ -35,32 +41,43 @@ export default function GantiPasswordModal({ onClose }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="card modal-card" onClick={(e) => e.stopPropagation()}>
-        <h2>Ganti Password</h2>
+        <h2>Tambah Admin</h2>
         <form onSubmit={tanganiSubmit}>
           <div className="field">
-            <label htmlFor="passwordLama">Password Lama</label>
+            <label htmlFor="namaPetugasBaru">Nama Petugas</label>
             <input
-              id="passwordLama"
-              type="password"
+              id="namaPetugasBaru"
               required
-              value={passwordLama}
-              onChange={(e) => setPasswordLama(e.target.value)}
+              placeholder="Masukkan nama lengkap"
+              value={namaPetugas}
+              onChange={(e) => setNamaPetugas(e.target.value)}
             />
           </div>
           <div className="field">
-            <label htmlFor="passwordBaru">Password Baru</label>
+            <label htmlFor="usernameBaru">Username</label>
             <input
-              id="passwordBaru"
-              type="password"
+              id="usernameBaru"
               required
-              value={passwordBaru}
-              onChange={(e) => setPasswordBaru(e.target.value)}
+              placeholder="Masukkan username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="field">
-            <label htmlFor="konfirmasiPassword">Konfirmasi Password Baru</label>
+            <label htmlFor="passwordBaruAdmin">Password</label>
             <input
-              id="konfirmasiPassword"
+              id="passwordBaruAdmin"
+              type="password"
+              required
+              placeholder="Minimal 6 karakter"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="konfirmasiPasswordBaruAdmin">Konfirmasi Password</label>
+            <input
+              id="konfirmasiPasswordBaruAdmin"
               type="password"
               required
               value={konfirmasiPassword}
@@ -77,7 +94,7 @@ export default function GantiPasswordModal({ onClose }) {
               style={{ width: "auto" }}
               disabled={mengirim}
             >
-              {mengirim ? "MENYIMPAN..." : "Simpan"}
+              {mengirim ? "MENYIMPAN..." : "Tambah"}
             </button>
           </div>
         </form>
