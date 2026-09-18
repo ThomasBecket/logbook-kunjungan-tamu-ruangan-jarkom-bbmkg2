@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { muatDataTamu } from "../api/storage";
+import socket from "../api/frontendSocket";
 import StatusBadge from "../components/StatusBadge";
 import DetailKunjunganModal from "../components/DetailKunjunganModal";
 import useDocumentTitle from "../hooks/useDocumentTitle";
@@ -10,9 +11,25 @@ export default function AdminTamuHariIni() {
   const [kunjunganDetail, setKunjunganDetail] = useState(null);
 
   useEffect(() => {
-    muatDataTamu()
-      .then(setDaftarTamu)
-      .catch(() => setDaftarTamu([]));
+    async function muatUlang() {
+      const data = await muatDataTamu();
+      setDaftarTamu(data);
+    }
+
+    muatUlang();
+
+    function tanganiPerubahan() {
+      muatUlang();
+    }
+
+    socket.on("kunjungan:baru", tanganiPerubahan);
+    socket.on("kunjungan:diubah", tanganiPerubahan);
+
+    return () => {
+      socket.off("kunjungan:baru", tanganiPerubahan);
+      socket.off("kunjungan:diubah", tanganiPerubahan);
+    };
+
   }, []);
 
   const labelHariIni = useMemo(

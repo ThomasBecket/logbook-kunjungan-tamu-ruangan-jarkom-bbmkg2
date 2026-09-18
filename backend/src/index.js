@@ -2,10 +2,15 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const http = require("http");
+const { pasangSocketIO } = require("./utils/backendSocket");
 const routerPengunjung = require("./routes/pengunjungRoute");
 const routerAdmin = require("./routes/adminRoute");
 
 const app = express();
+const server = http.createServer(app);
+
+pasangSocketIO(server);
 
 app.use(cors());
 app.use(express.json());
@@ -25,6 +30,6 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server jalan di http://localhost:${PORT}`);
 });

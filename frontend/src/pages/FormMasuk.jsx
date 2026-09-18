@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
 import PeraturanModal from "../components/PeraturanModal";
+import Footer from "../components/Footer";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useToast } from "../context/ToastContext";
 import { kirimKunjungan, simpanIdTerakhir } from "../api/storage";
-import Footer from "../components/Footer";
 
 export default function FormMasuk() {
   useDocumentTitle("Tamu Masuk — BBMKG Wilayah II");

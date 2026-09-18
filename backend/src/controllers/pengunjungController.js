@@ -4,6 +4,7 @@
 // di sini — itu semua ada di models/pengunjungModel.js.
 
 const PengunjungModel = require("../models/pengunjungModel");
+const { ambilSocketIO } = require("../utils/backendSocket");
 
 
 
@@ -30,6 +31,8 @@ async function tambahKunjungan(req, res) {
       unitKerja: unitKerja.trim(),
       keperluan: keperluan.trim(),
     });
+
+    ambilSocketIO()?.emit("kunjungan:baru", kunjungan);
 
     res.status(201).json(kunjungan);
   } catch (err) {
@@ -109,6 +112,8 @@ async function ubahStatusKunjungan(req, res) {
 
     const kunjungan = await PengunjungModel.cariById(id);
 
+    ambilSocketIO()?.emit("kunjungan:diubah", kunjungan);
+
     res.json(kunjungan);
   } catch (err) {
     console.error(err);
@@ -137,6 +142,9 @@ async function catatKunjunganKeluar(req, res) {
 
     await PengunjungModel.catatKeluar(id);
     const kunjungan = await PengunjungModel.cariById(id);
+
+    ambilSocketIO()?.emit("kunjungan:diubah", kunjungan);
+
     res.json(kunjungan);
   } catch (err) {
     console.error(err);

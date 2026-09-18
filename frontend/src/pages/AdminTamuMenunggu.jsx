@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useToast } from "../context/ToastContext";
 import { useAutentikasiAdmin } from "../context/AutentikasiAdminContext";
 import { muatDataTamu, ubahStatusKunjungan } from "../api/storage";
+import socket from "../api/frontendSocket";
 import StatusBadge from "../components/StatusBadge";
 import DetailKunjunganModal from "../components/DetailKunjunganModal";
 import TolakKunjunganModal from "../components/TolakKunjunganModal";
@@ -34,32 +35,55 @@ export default function AdminTamuMenunggu() {
 
   useEffect(() => {
     muatUlang();
+
+    function tanganiPerubahan() {
+      muatUlang();
+    }
+
+    socket.on("kunjungan:baru", tanganiPerubahan);
+    socket.on("kunjungan:diubah", tanganiPerubahan);
+
+    return () => {
+      socket.off("kunjungan:baru", tanganiPerubahan);
+      socket.off("kunjungan:diubah", tanganiPerubahan);
+    };
+
   }, []);
 
+
+  
   const jumlahMenunggu = useMemo(
     () => daftarTamu.filter((v) => v.status === "Menunggu Persetujuan").length,
     [daftarTamu]
   );
+
+
+  
   const jumlahDiDalam = useMemo(
     () => daftarTamu.filter((v) => v.status === "Diterima").length,
     [daftarTamu]
   );
+
+
 
   const kunciHariIni = useMemo(
     () => new Date().toISOString().slice(0, 10),
     []
   );
 
+
+
   const tamuMenungguHariIni = useMemo(
     () =>
       daftarTamu.filter(
         (v) =>
-          v.status === "Menunggu Persetujuan" &&
           v.waktuMasukIso &&
           v.waktuMasukIso.slice(0, 10) === kunciHariIni
       ),
     [daftarTamu, kunciHariIni]
   );
+
+
 
   const tamuMenungguSebelumnya = useMemo(
     () =>
@@ -71,6 +95,8 @@ export default function AdminTamuMenunggu() {
       ),
     [daftarTamu, kunciHariIni]
   );
+
+
 
   async function ubahStatus(id, status) {
     try {

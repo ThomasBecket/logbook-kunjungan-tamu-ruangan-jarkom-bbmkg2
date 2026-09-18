@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
+import Footer from "../components/Footer";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useToast } from "../context/ToastContext";
 import { catatKunjunganKeluar, ambilIdTerakhir, hapusIdTerakhir,} from "../api/storage";
-import Footer from "../components/Footer";
 
 export default function FormKeluar() {
   useDocumentTitle("Form Keluar Tamu — Ruangan Jarkom BBMKG Wilayah II");
   const tampilkanToast = useToast();
+  const navigate = useNavigate();
   const [idKunjungan, setIdKunjungan] = useState("");
   const [hasil, setHasil] = useState(null); // { nama, waktu } setelah berhasil
   const [mengirim, setMengirim] = useState(false);

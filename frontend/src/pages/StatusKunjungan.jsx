@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
+import Footer from "../components/Footer";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useToast } from "../context/ToastContext";
 import { cekStatusKunjungan } from "../api/storage";
-import Footer from "../components/Footer";
+import socket from "../api/frontendSocket";
 
 export default function StatusKunjungan() {
   const { id } = useParams();
@@ -34,22 +35,38 @@ export default function StatusKunjungan() {
     }
   }
 
+  async function salinIdKunjungan() {
+  try {
+    await navigator.clipboard.writeText(id);
+    setTersalin(true);
+    tampilkanToast("Nomor kunjungan berhasil disalin.");
+
+    setTimeout(() => {
+      setTersalin(false);
+    }, 2000);
+  } catch {
+    tampilkanToast("Gagal menyalin nomor kunjungan.");
+  }
+}
+
   useEffect(() => {
     muatStatus();
 
+    function tanganiPerubahan(kunjungan) {
+      if (kunjungan.id === id) {
+        setTamu(kunjungan);
+        setTidakDitemukan(false);
+      }
+    }
+
+    socket.on("kunjungan:diubah", tanganiPerubahan);
+
+    return () => {
+      socket.off("kunjungan:diubah", tanganiPerubahan);
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-
-  function salinIdKunjungan() {
-    navigator.clipboard.writeText(id).then(() => {
-      tampilkanToast("Nomor kunjungan disalin.");
-      setTersalin(true);
-
-      setTimeout(() => {
-        setTersalin(false);
-      }, 1500);
-    });
-  }
 
   return (
     <>
