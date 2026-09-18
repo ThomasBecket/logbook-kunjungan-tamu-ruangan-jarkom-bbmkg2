@@ -17,6 +17,8 @@ async function updatePassword(username, passwordHashBaru) {
   return hasil.affectedRows > 0;
 }
 
+
+
 // Cari id_admin 3 digit terkecil yang belum dipakai — kalau 002 pernah
 // dihapus, admin baru berikutnya akan dapat "002" lagi, bukan lompat ke 004.
 async function cariIdBerikutnya() {
@@ -28,6 +30,8 @@ async function cariIdBerikutnya() {
   }
   return String(n).padStart(3, "0");
 }
+
+
 
 // Admin baru hanya dibuat oleh admin utama dan langsung mendapatkan role
 // "petugas" tanpa melalui proses pendaftaran atau persetujuan.
@@ -51,6 +55,8 @@ async function buat({ username, passwordHash, namaPetugas }) {
   throw new Error("Gagal generate id_admin, coba lagi.");
 }
 
+
+
 // Mengambil seluruh data admin untuk ditampilkan oleh admin utama.
 async function cariSemuaAdmin() {
   const [baris] = await pool.query(
@@ -60,6 +66,8 @@ async function cariSemuaAdmin() {
   );
   return baris;
 }
+
+
 
 // Menghapus akun admin berdasarkan id_admin.
 async function hapusAdmin(id) {

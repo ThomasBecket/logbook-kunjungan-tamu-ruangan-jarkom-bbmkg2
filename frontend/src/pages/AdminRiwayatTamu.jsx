@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from "xlsx";
 import { muatDataTamu } from "../api/storage";
 import StatusBadge from "../components/StatusBadge";
+import DetailKunjunganModal from "../components/DetailKunjunganModal";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const OPSI_UKURAN_HALAMAN = [10, 50, 100, 250, 500, "semua"];
@@ -73,6 +74,7 @@ function HeaderKalender({
 export default function AdminRiwayatTamu() {
   useDocumentTitle("Riwayat Tamu — BBMKG Wilayah II");
   const [daftarTamu, setDaftarTamu] = useState([]);
+  const [kunjunganDetail, setKunjunganDetail] = useState(null);
 
   // Filter rentang tanggal — sekarang pakai objek Date (bukan string),
   // dikontrol lewat react-datepicker.
@@ -153,9 +155,31 @@ export default function AdminRiwayatTamu() {
       Status: v.status,
       "Waktu Masuk": v.waktuMasuk || "-",
       "Waktu Keluar": v.waktuKeluar || "-",
+      "Petugas Verifikasi": v.namaPetugasVerifikasi || "-",
+      "Alasan Ditolak": v.alasanDitolak || "-",
     }));
 
-    const worksheet = XLSX.utils.json_to_sheet(baris);
+    const worksheet = XLSX.utils.aoa_to_sheet([
+      ["Riwayat Tamu"],
+      [],
+    ]);
+    XLSX.utils.sheet_add_json(worksheet, baris, { origin: "A3" });
+
+    const jumlahKolom = Object.keys(baris[0]).length;
+    worksheet["!merges"] = [
+      {
+        s: { r: 0, c: 0 },
+        e: { r: 0, c: jumlahKolom - 1 },
+      },
+    ];
+
+    worksheet["A1"].s = {
+      font: {
+        bold: true,
+        sz: 14,
+      },
+    };
+
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Riwayat Tamu");
 
@@ -238,7 +262,7 @@ export default function AdminRiwayatTamu() {
           >
             {OPSI_UKURAN_HALAMAN.map((opsi) => (
               <option key={opsi} value={opsi}>
-                {opsi === "semua" ? "Semua Record" : `${opsi} / halaman`}
+                {opsi === "semua" ? "Semua Data" : `${opsi} / halaman`}
               </option>
             ))}
           </select>
@@ -278,7 +302,7 @@ export default function AdminRiwayatTamu() {
                     ? index + 1
                     : (halamanAktif - 1) * ukuranHalaman + index + 1;
                 return (
-                  <tr key={v.id}>
+                  <tr key={v.id} onClick={() => setKunjunganDetail(v)} style={{ cursor: "pointer" }}>
                     <td className="col-no">{nomorUrut}</td>
                     <td className="col-id">{v.id}</td>
                     <td>{(v.namaTamu || []).join(", ")}</td>
@@ -322,6 +346,11 @@ export default function AdminRiwayatTamu() {
           </button>
         </div>
       )}
+
+      <DetailKunjunganModal
+        kunjungan={kunjunganDetail}
+        onClose={() => setKunjunganDetail(null)}
+      />
     </section>
   );
 }

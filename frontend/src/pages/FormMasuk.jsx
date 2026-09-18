@@ -5,6 +5,7 @@ import PeraturanModal from "../components/PeraturanModal";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useToast } from "../context/ToastContext";
 import { kirimKunjungan, simpanIdTerakhir } from "../api/storage";
+import Footer from "../components/Footer";
 
 export default function FormMasuk() {
   useDocumentTitle("Tamu Masuk — BBMKG Wilayah II");
@@ -58,6 +59,8 @@ export default function FormMasuk() {
 
   return (
     <>
+    
+    <div className="public-page">
       <SiteHeader badge="TAMU MASUK" />
       <main>
         <section className="container narrow">
@@ -124,7 +127,12 @@ export default function FormMasuk() {
         </section>
       </main>
 
+      <Footer />
+
       {!sudahSetuju && <PeraturanModal onSetuju={() => setSudahSetuju(true)} />}
+
+    </div>
+
     </>
   );
 }

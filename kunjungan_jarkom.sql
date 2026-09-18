@@ -37,8 +37,8 @@ SET NAMES utf8mb4;
 -- lewat phpMyAdmin, karena belum ada admin utama yang bisa approve dia.
 -- Gunakan hashPassword.js untuk generate hash bcrypt-nya, contoh:
 --
---   INSERT INTO admin (id_admin, username, password, nama_petugas, role, status)
---   VALUES ('001', 'admin', '$2b$10$...hasil_hash_bcrypt...', 'Nama Anda', 'utama', 'Diterima');
+--   INSERT INTO admin (id_admin, username, password, nama_petugas, role)
+--   VALUES ('001', 'admin', '$2b$10$...hasil_hash_bcrypt...', 'Nama Anda', 'utama');
 -- --------------------------------------------------------
 CREATE TABLE `admin` (
   `id_admin` VARCHAR(3) NOT NULL,               -- contoh: 001, 002, 003
@@ -62,6 +62,7 @@ CREATE TABLE `pengunjung` (
   `nama_petugas_verifikasi` VARCHAR(255) NULL DEFAULT NULL, -- diisi otomatis dari sesi login saat approve/reject
   `waktu_masuk` DATETIME NOT NULL,
   `waktu_keluar` DATETIME NULL DEFAULT NULL,     -- baru terisi saat tamu keluar
+  `alasan_ditolak` TEXT NULL,
   PRIMARY KEY (`id_pengunjung`)
 );
 

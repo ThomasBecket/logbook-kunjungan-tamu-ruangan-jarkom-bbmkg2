@@ -1,8 +1,8 @@
 const PETA_STATUS = {
-  "Menunggu Persetujuan": ["wait", "Menunggu"],
-  Diterima: ["ok", "Disetujui"],
-  Ditolak: ["no", "Ditolak"],
-  "Kunjungan Selesai": ["ok", "Sudah Keluar"],
+  "Menunggu Persetujuan": ["tunggu", "Menunggu"],
+  Diterima: ["disetujui", "Disetujui"],
+  Ditolak: ["ditolak", "Ditolak"],
+  "Kunjungan Selesai": ["selesai", "Sudah Keluar"],
 };
 
 export default function StatusBadge({ status }) {

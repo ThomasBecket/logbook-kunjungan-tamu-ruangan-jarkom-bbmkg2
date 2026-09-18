@@ -4,6 +4,7 @@ import SiteHeader from "../components/SiteHeader";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useToast } from "../context/ToastContext";
 import { cekStatusKunjungan } from "../api/storage";
+import Footer from "../components/Footer";
 
 export default function StatusKunjungan() {
   const { id } = useParams();
@@ -52,6 +53,8 @@ export default function StatusKunjungan() {
 
   return (
     <>
+
+    <div className="public-page">
       <SiteHeader badge="STATUS KUNJUNGAN" />
 
       <main>
@@ -61,6 +64,8 @@ export default function StatusKunjungan() {
               <p className="subtitle">Memuat status kunjungan...</p>
             </div>
           )}
+
+
 
           {!memuat && tidakDitemukan && (
             <div className="card status-card">
@@ -83,6 +88,8 @@ export default function StatusKunjungan() {
               </button>
             </div>
           )}
+
+
 
           {!memuat &&
             tamu &&
@@ -126,7 +133,9 @@ export default function StatusKunjungan() {
                   Cek Status
                 </button>
               </div>
-            )}
+          )}
+
+
 
           {!memuat && tamu && tamu.status === "Diterima" && (
             <div className="card status-card">
@@ -169,6 +178,8 @@ export default function StatusKunjungan() {
             </div>
           )}
 
+
+
           {!memuat && tamu && tamu.status === "Ditolak" && (
             <div className="card status-card">
               <div className="status-icon no">×</div>
@@ -190,6 +201,16 @@ export default function StatusKunjungan() {
                 )}
               </p>
 
+              {tamu.alasanDitolak && (
+                <div className="status-box status-box-ditolak">
+                  <strong>Alasan Ditolak:</strong>
+
+                  <div style={{ marginTop: "8px", lineHeight: 1.6 }}>
+                    {tamu.alasanDitolak}
+                  </div>
+                </div>
+              )}
+
               <br />
 
               <button
@@ -200,6 +221,8 @@ export default function StatusKunjungan() {
               </button>
             </div>
           )}
+
+          
 
           {!memuat &&
             tamu &&
@@ -227,6 +250,11 @@ export default function StatusKunjungan() {
             )}
         </section>
       </main>
+
+      <Footer />
+
+    </div>
+
     </>
   );
 }

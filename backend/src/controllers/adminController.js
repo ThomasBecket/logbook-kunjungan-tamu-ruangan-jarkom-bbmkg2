@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const AdminModel = require("../models/adminModel");
 
+
+
 // POST /api/admin/login — login, kembalikan JWT token
 async function login(req, res) {
   try {
@@ -37,6 +39,8 @@ async function login(req, res) {
     res.status(500).json({ error: "Gagal login." });
   }
 }
+
+
 
 // POST /api/admin/tambah — tambah akun admin baru (HANYA admin utama)
 async function tambahAdmin(req, res) {
@@ -75,6 +79,8 @@ async function tambahAdmin(req, res) {
   }
 }
 
+
+
 // GET /api/admin/semua — mengambil seluruh admin (HANYA admin utama)
 async function ambilSemuaAdmin(req, res) {
   try {
@@ -85,6 +91,8 @@ async function ambilSemuaAdmin(req, res) {
     res.status(500).json({ error: "Gagal mengambil data admin." });
   }
 }
+
+
 
 // DELETE /api/admin/:id — hapus akses admin petugas (HANYA admin utama)
 async function hapusAdmin(req, res) {
@@ -115,6 +123,8 @@ async function hapusAdmin(req, res) {
   }
 }
 
+
+
 // PATCH /api/admin/ganti-password — ganti password (WAJIB sudah login)
 async function gantiPassword(req, res) {
   try {
@@ -144,6 +154,8 @@ async function gantiPassword(req, res) {
     res.status(500).json({ error: "Gagal mengganti password." });
   }
 }
+
+
 
 // GET /api/admin/saya — verifikasi sesi + ambil data admin TERBARU dari
 // database (bukan cuma dari isi token lama). Dipanggil frontend setiap kali

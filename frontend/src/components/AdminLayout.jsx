@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useAutentikasiAdmin } from "../context/AutentikasiAdminContext";
 import ProfileMenu from "./ProfileMenu";
+import Footer from "./Footer";
 
 const NAV_ITEMS = [
   { to: "/admin", label: "Dashboard", end: true },
@@ -43,9 +44,14 @@ export default function AdminLayout() {
         <ProfileMenu />
       </aside>
 
-      <main className="main-panel">
-        <Outlet />
-      </main>
+      <div className="admin-content">
+          <main className="main-panel">
+            <Outlet />
+          </main>
+
+          <Footer />
+      </div>
+
     </div>
   );
 }

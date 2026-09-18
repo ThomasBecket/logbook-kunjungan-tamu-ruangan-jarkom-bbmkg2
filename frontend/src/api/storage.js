@@ -10,16 +10,22 @@
 
 import api from "./client";
 
+
+
 // Ambil pesan error yang jelas dari response backend, atau pesan default
 function pesanError(err, default_) {
   return err?.response?.data?.error || default_;
 }
+
+
 
 // GET /api/pengunjung — semua data kunjungan
 export async function muatDataTamu() {
   const res = await api.get("/pengunjung");
   return res.data;
 }
+
+
 
 // POST /api/pengunjung — tamu masuk submit data baru
 // Mengembalikan objek kunjungan lengkap dari backend (termasuk id asli
@@ -33,6 +39,8 @@ export async function kirimKunjungan({ namaTamu, unitKerja, keperluan }) {
   }
 }
 
+
+
 // GET /api/pengunjung/:id — cek status 1 kunjungan (tombol "Cek Status")
 export async function cekStatusKunjungan(id) {
   try {
@@ -43,17 +51,21 @@ export async function cekStatusKunjungan(id) {
   }
 }
 
+
+
 // PATCH /api/pengunjung/:id/status — admin approve/reject
 // Nama petugas yang memverifikasi otomatis diisi backend dari token JWT
 // (siapa yang sedang login), tidak dikirim dari sini.
-export async function ubahStatusKunjungan(id, status) {
+export async function ubahStatusKunjungan(id, status, alasanDitolak = null) {
   try {
-    const res = await api.patch(`/pengunjung/${id}/status`, { status });
+    const res = await api.patch(`/pengunjung/${id}/status`, { status, alasanDitolak });
     return res.data;
   } catch (err) {
     throw new Error(pesanError(err, "Gagal mengubah status."));
   }
 }
+
+
 
 // POST /api/pengunjung/:id/keluar — konfirmasi tamu keluar
 export async function catatKunjunganKeluar(id) {
@@ -64,6 +76,8 @@ export async function catatKunjunganKeluar(id) {
     throw new Error(pesanError(err, "Gagal mencatat kepulangan."));
   }
 }
+
+
 
 // ===== Bagian ini tetap localStorage (kenyamanan UI, bukan data inti) =====
 const KUNCI_ID_TERAKHIR = "bbmkg_id_terakhir";

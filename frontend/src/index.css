@@ -37,6 +37,21 @@ body {
 button, input, textarea { font: inherit; }
 button { cursor: pointer; }
 
+
+
+/* ===== Layout Setiap Public Page ===== */
+.public-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.public-page main {
+  flex: 1;
+}
+
+
+
 /* ===== HEADER (masuk.html / keluar.html) ===== */
 .site-header {
   height: 76px;
@@ -77,6 +92,8 @@ h2 { font-size: 22px; margin: 6px 0; font-weight: 800; }
 .subtitle { color: var(--muted); line-height: 1.7; margin: 0 auto; max-width: 560px; font-size: 14px; text-align: center; }
 .narrow h1, .narrow > .subtitle, .narrow .eyebrow { text-align: center; }
 
+
+
 /* ===== CARD ===== */
 .card {
   background: var(--surface); border: 1px solid var(--border);
@@ -105,8 +122,11 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
 .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 8px 20px rgba(28,78,148,.3); }
 .btn-secondary { background: var(--info-bg); color: var(--info); }
 .btn-danger { background: #fff; color: var(--danger); border: 1.5px solid var(--danger); }
+.btn-danger:hover:not(:disabled) { background: var(--danger); color: #fff; box-shadow: 0 8px 20px rgba(217, 54, 43, .25);}
 .btn-success { width: 100%; background: var(--primary); color: #fff; }
 .btn-small { padding: 9px 14px; font-size: 11px; border-radius: 9px; }
+
+
 
 /* ===== nama rombongan ===== */
 .name-row { display: flex; gap: 8px; margin-bottom: 9px; }
@@ -131,6 +151,8 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   border-radius: 12px; padding: 12px 15px; font-size: 12.5px; font-weight: 600;
   margin: 14px 0; text-align: center;
 }
+
+
 
 /* ===== status card ===== */
 .status-card { padding: 40px 32px; text-align: center; }
@@ -163,17 +185,22 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   margin: 22px 0; padding: 14px 16px; border-radius: 14px;
   background: var(--success-bg); color: var(--success); font-size: 13px; font-weight: 600;
 }
+.status-box-ditolak { background: var(--danger-bg); border-color: var(--danger); color: var(--danger); }
+.status-box-ditolak strong {  color: var(--danger); }
 .status-box strong { color: inherit; }
 #waiting .status-box { background: var(--warning-bg); color: var(--warning); }
 #rejected .status-box { background: var(--danger-bg); color: var(--danger); }
+
+
 
 /* ===== ADMIN — sidebar + main panel, sesuai mockup ===== */
 .admin-shell { display: flex; min-height: 100vh; }
 .sidebar {
   width: 250px; flex-shrink: 0; background: var(--navy); color: #fff;
   padding: 26px 18px; display: flex; flex-direction: column; gap: 30px;
+  position: sticky; top: 0; height: 100vh;
 }
-.sidebar-brand { display: flex; align-items: center; gap: 11px; padding: 0 6px; }
+.sidebar-brand { display: flex; align-items: center; gap: 11px; padding: 0 6px; letter-spacing: 0.4px; line-height: 1.6; }
 .sidebar-brand .brand-mark { background: var(--primary-2); }
 .sidebar-brand strong { display: block; font-size: 13px; color: #fff; }
 .sidebar-brand span { display: block; font-size: 11px; color: #9db3d6; margin-top: 2px; }
@@ -184,7 +211,23 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   text-decoration: none; display: block;
 }
 .nav-item.active { background: var(--primary-2); color: #fff; }
-.main-panel { flex: 1; padding: 40px 4vw; min-width: 0; }
+.admin-content {
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.main-panel {
+  flex: 1;
+  padding: 40px 4vw;
+  min-width: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+}
 
 .dashboard { padding-top: 0; }
 .dashboard-top {
@@ -213,9 +256,10 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
 .badge {
   display: inline-flex; padding: 6px 11px; border-radius: 999px; font-size: 11px; font-weight: 700;
 }
-.badge.wait { background: var(--warning-bg); color: var(--warning); }
-.badge.ok { background: var(--success-bg); color: var(--success); }
-.badge.no { background: var(--danger-bg); color: var(--danger); }
+.badge.tunggu { background: var(--warning-bg); color: var(--warning); }
+.badge.disetujui { background: var(--success-bg); color: var(--success); }
+.badge.ditolak { background: var(--danger-bg); color: var(--danger); }
+.badge.selesai { background: var(--info-bg); color: var(--info); }
 
 .empty { padding: 42px; text-align: center; color: var(--muted); }
 
@@ -225,6 +269,101 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   background: var(--navy); color: #fff; font-size: 13px; transition: .2s ease; z-index: 10;
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+
+
+/* ===== Admin Tamu Menunggu: Section ===== */
+.pending-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.pending-section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 24px 18px;
+}
+
+.pending-section-title {
+  min-width: 0;
+}
+
+.pending-section-title h2 {
+  margin: 0 0 5px;
+  font-size: 19px;
+  line-height: 1.35;
+}
+
+.pending-section-title p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.pending-section-count {
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--info-bg);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pending-section-body {
+  border-top: 1px solid var(--border);
+}
+
+.pending-section-body .table-wrapper {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.pending-section-empty {
+  min-height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 24px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 13px;
+}
+
+/* Mobile */
+@media (max-width: 720px) {
+  .pending-section-header {
+    padding: 18px;
+  }
+
+  .pending-section-title h2 {
+    font-size: 17px;
+  }
+
+  .pending-section-title p {
+    font-size: 12px;
+  }
+
+  .pending-section-count {
+    font-size: 10px;
+  }
+
+  .pending-section-empty {
+    min-height: 110px;
+    padding: 24px 18px;
+  }
+}
+
+
 
 /* ===== Animasi ===== */
 .form-card, .status-card { animation: fadeSlideUp .45s ease; }
@@ -271,6 +410,8 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   .main-panel { padding: 26px 5%; }
   .visitor-row { flex-wrap: wrap; }
 }
+
+
 /* ===== Menu Profil (sidebar bawah) ===== */
 .sidebar-profile {
   position: relative;
@@ -327,6 +468,8 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
 .profile-menu-item.danger { color: var(--danger); }
 .profile-menu-item + .profile-menu-item { border-top: 1px solid var(--border); }
 
+
+
 /* ===== Modal (Ganti Password) ===== */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(15, 37, 71, 0.45);
@@ -337,6 +480,8 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
 .modal-actions {
   display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;
 }
+
+
 
 /* ===== Modal (Konfirmasi Tambah Admin Petugas) ===== */
 .modal-overlay-konfirmasi {
@@ -393,6 +538,8 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   margin-top: 0;
 }
 
+
+
 /* ===== Modal Peraturan & Tata Tertib (Form Masuk) ===== */
 .peraturan-card {
   width: min(520px, 100%);
@@ -433,6 +580,8 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;
 }
 
+
+
 /* ===== Dashboard: grid chart ===== */
 .chart-grid {
   display: grid;
@@ -442,12 +591,16 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
 .chart-card { padding: 22px; }
 .chart-card h2 { font-size: 15px; margin-bottom: 14px; }
 
+
+
 /* ===== Riwayat: dropdown sort ===== */
 .sort-select {
   border: 1px solid var(--border); border-radius: 10px;
   padding: 10px 14px; background: var(--surface); color: var(--text);
   font-size: 13px; font-weight: 600; height: fit-content;
 }
+
+
 
 /* ===== Riwayat: baris filter (tanggal/bulan/tahun/urutan/ukuran halaman) ===== */
 .filter-bar {
@@ -502,12 +655,25 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
 .react-datepicker__day:hover { background: var(--info-bg); }
 .react-datepicker__triangle { display: none; }
 
+@media (max-width: 720px) {
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .filter-bar select { width: 100%; }
+}
+
+@media (max-width: 900px) {
+  .chart-grid { grid-template-columns: 1fr; }
+}
+
+
+
 /* ===== Riwayat: kontrol pagination ===== */
 .pagination {
   display: flex; align-items: center; justify-content: center; gap: 16px;
   margin-top: 20px; font-size: 13px; font-weight: 600; color: var(--muted);
 }
 .pagination button:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+
 
 /* ===== Riwayat Tamu: Tombol Unduh Excel ===== */
 .btn-download-excel {
@@ -516,6 +682,8 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
 }
 .btn-download-excel:hover { background: #17803f; }
 
+
+
 /* ===== List Petugas Admin: Tombol Tambah Admin ===== */
 .btn-tambah-admin {
   min-width: 180px;
@@ -523,6 +691,8 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   padding: 10px 20px;
   font-size: 15px;
 }
+
+
 
 /* ===== Tabel data (Tamu Menunggu, Riwayat Tamu, Tamu Hari Ini) ===== */
 .table-wrapper {
@@ -572,6 +742,8 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
 }
 .data-table .status-cell { display: flex; gap: 8px; white-space: nowrap; }
 
+
+
 /* ===== Untuk tampilan info nama petugas yang memverifikasi ===== */
 .nama-petugas-verifikasi {
   display: inline-block;
@@ -580,11 +752,127 @@ input::placeholder, textarea::placeholder { color: #9aa4b2; }
   margin-top: 8px;
 }
 
-@media (max-width: 720px) {
-  .filter-bar { flex-direction: column; align-items: stretch; }
-  .filter-bar select { width: 100%; }
+
+
+/* ===== Modal Detail Kunjungan ===== */
+.modal-detail-kunjungan {
+  width: min(620px, calc(100vw - 32px));
+  max-height: 88vh;
+  overflow-y: auto;
 }
 
-@media (max-width: 900px) {
-  .chart-grid { grid-template-columns: 1fr; }
+.modal-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.modal-detail-header h2 {
+  margin-top: 6px;
+  color: var(--primary);
+}
+
+.detail-data {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 13px 15px;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-item span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.detail-item strong {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+  word-break: break-word;
+}
+
+.detail-item-column {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.detail-item-column strong {
+  text-align: left;
+  line-height: 1.6;
+}
+
+.detail-alasan-ditolak {
+  background: var(--danger-bg);
+}
+
+.detail-alasan-ditolak span,
+.detail-alasan-ditolak strong {
+  color: var(--danger);
+}
+
+
+
+/* ===== Modal Alasan Ditolak ===== */
+.modal-alasan-ditolak {
+  width: min(500px, calc(100vw - 32px));
+}
+
+.modal-alasan-ditolak textarea {
+  min-height: 120px;
+  background: var(--surface);
+}
+
+.modal-alasan-ditolak .modal-actions {
+  margin-top: 16px;
+}
+
+@media (max-width: 600px) {
+  .modal-detail-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .detail-item {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .detail-item strong {
+    text-align: left;
+  }
+}
+
+
+
+/* ===== Footer ===== */
+.site-footer {
+  flex-shrink: 0;
+  padding: 28px 4vw;
+  background: var(--primary-dark);
+  color: #c9d8ee;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }

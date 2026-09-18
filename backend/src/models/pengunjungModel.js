@@ -16,6 +16,7 @@ const QUERY_DASAR = `
     p.waktu_masuk AS waktuMasukMentah,
     p.waktu_keluar AS waktuKeluarMentah,
     p.nama_petugas_verifikasi AS namaPetugasVerifikasi,
+    p.alasan_ditolak AS alasanDitolak,
     GROUP_CONCAT(n.nama ORDER BY n.id_nama SEPARATOR '||') AS namaMentah
   FROM pengunjung p
   LEFT JOIN pengunjung_nama n ON n.id_pengunjung = p.id_pengunjung
@@ -33,6 +34,9 @@ function petakanBaris(baris) {
 
     // Nama petugas yang melakukan verifikasi
     namaPetugasVerifikasi: baris.namaPetugasVerifikasi || null,
+
+    // Alasan penolakan, NULL jika tidak ada alasan
+    alasanDitolak: baris.alasanDitolak || null,
 
     waktuMasukIso: keFormatIso(baris.waktuMasukMentah),
     waktuMasuk: formatTampilan(baris.waktuMasukMentah),
@@ -108,16 +112,19 @@ async function buat({ namaTamu, unitKerja, keperluan }) {
   return cariById(id);
 }
 
+
+
 // Mengubah status sekaligus menyimpan nama petugas
 // yang melakukan verifikasi.
-async function ubahStatus(id, status, namaPetugas) {
+async function ubahStatus(id, status, namaPetugas, alasanDitolak = null) {
   const [hasil] = await pool.query(
     `UPDATE pengunjung
      SET
        status = ?,
-       nama_petugas_verifikasi = ?
+       nama_petugas_verifikasi = ?,
+       alasan_ditolak = ?
      WHERE id_pengunjung = ?`,
-    [status, namaPetugas, id]
+    [status, namaPetugas, alasanDitolak, id]
   );
 
   return hasil.affectedRows > 0;

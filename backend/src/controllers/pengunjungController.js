@@ -5,6 +5,8 @@
 
 const PengunjungModel = require("../models/pengunjungModel");
 
+
+
 // POST /api/pengunjung — tamu masuk submit data
 async function tambahKunjungan(req, res) {
   try {
@@ -36,6 +38,8 @@ async function tambahKunjungan(req, res) {
   }
 }
 
+
+
 // GET /api/pengunjung — semua data
 async function ambilSemuaKunjungan(req, res) {
   try {
@@ -46,6 +50,8 @@ async function ambilSemuaKunjungan(req, res) {
     res.status(500).json({ error: "Gagal mengambil data kunjungan." });
   }
 }
+
+
 
 // GET /api/pengunjung/:id — cek status 1 tamu
 async function ambilKunjungan(req, res) {
@@ -61,36 +67,58 @@ async function ambilKunjungan(req, res) {
   }
 }
 
+
+
 // PATCH /api/pengunjung/:id/status — admin approve/reject (WAJIB sudah login)
 async function ubahStatusKunjungan(req, res) {
   try {
     const { id } = req.params;
-    const { status } = req.body;
-    const { namaPetugas } = req.admin; // dari token JWT, bukan diketik manual
+    const { status, alasanDitolak } = req.body;
+    const { namaPetugas } = req.admin;
 
     if (!namaPetugas) {
       return res.status(401).json({
-        error: "Sesi Anda tidak lengkap (kemungkinan sesi lama). Silakan logout dan login ulang.",
+        error:
+          "Sesi Anda tidak lengkap (kemungkinan sesi lama). Silakan logout dan login ulang.",
       });
     }
 
     const statusDiizinkan = ["Diterima", "Ditolak"];
+
     if (!statusDiizinkan.includes(status)) {
       return res.status(400).json({ error: "Status tidak valid." });
     }
 
-    const berhasil = await PengunjungModel.ubahStatus(id, status, namaPetugas);
+    const alasanBersih =
+      status === "Ditolak" && alasanDitolak != null
+        ? String(alasanDitolak).trim() || null
+        : null;
+
+    const berhasil = await PengunjungModel.ubahStatus(
+      id,
+      status,
+      namaPetugas,
+      alasanBersih
+    );
+
     if (!berhasil) {
-      return res.status(404).json({ error: "Nomor kunjungan tidak ditemukan." });
+      return res.status(404).json({
+        error: "Nomor kunjungan tidak ditemukan.",
+      });
     }
 
     const kunjungan = await PengunjungModel.cariById(id);
+
     res.json(kunjungan);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Gagal mengubah status." });
+    res.status(500).json({
+      error: "Gagal mengubah status.",
+    });
   }
 }
+
+
 
 // POST /api/pengunjung/:id/keluar — konfirmasi tamu keluar
 async function catatKunjunganKeluar(req, res) {

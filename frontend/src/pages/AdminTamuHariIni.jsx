@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { muatDataTamu } from "../api/storage";
 import StatusBadge from "../components/StatusBadge";
+import DetailKunjunganModal from "../components/DetailKunjunganModal";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function AdminTamuHariIni() {
   useDocumentTitle("Tamu Hari Ini — BBMKG Wilayah II");
   const [daftarTamu, setDaftarTamu] = useState([]);
+  const [kunjunganDetail, setKunjunganDetail] = useState(null);
 
   useEffect(() => {
     muatDataTamu()
@@ -54,18 +56,20 @@ export default function AdminTamuHariIni() {
                 <th>Unit Kerja / Instansi</th>
                 <th>Keperluan</th>
                 <th>Waktu Masuk</th>
+                <th>Waktu Keluar</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {tamuHariIni.map((v, index) => (
-                <tr key={v.id}>
+                <tr key={v.id} onClick={() => setKunjunganDetail(v)} style={{ cursor: "pointer" }}>
                   <td className="col-no">{index + 1}</td>
                   <td className="col-id">{v.id}</td>
                   <td>{(v.namaTamu || []).join(", ")}</td>
                   <td>{v.unitKerja}</td>
                   <td>{v.keperluan}</td>
                   <td>{v.waktuMasuk}</td>
+                  <td>{v.waktuKeluar || "-"}</td>
                   <td>
                     <StatusBadge status={v.status} />
                   </td>
@@ -77,6 +81,11 @@ export default function AdminTamuHariIni() {
       ) : (
         <div className="card empty">Belum ada tamu hari ini.</div>
       )}
+
+      <DetailKunjunganModal
+        kunjungan={kunjunganDetail}
+        onClose={() => setKunjunganDetail(null)}
+      />
     </section>
   );
 }

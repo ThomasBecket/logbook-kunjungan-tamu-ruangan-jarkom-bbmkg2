@@ -2,11 +2,8 @@ import { useEffect, useState } from "react";
 import SiteHeader from "../components/SiteHeader";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useToast } from "../context/ToastContext";
-import {
-  catatKunjunganKeluar,
-  ambilIdTerakhir,
-  hapusIdTerakhir,
-} from "../api/storage";
+import { catatKunjunganKeluar, ambilIdTerakhir, hapusIdTerakhir,} from "../api/storage";
+import Footer from "../components/Footer";
 
 export default function FormKeluar() {
   useDocumentTitle("Form Keluar Tamu — Ruangan Jarkom BBMKG Wilayah II");
@@ -45,6 +42,8 @@ export default function FormKeluar() {
 
   return (
     <>
+    
+    <div className="public-page">
       <SiteHeader badge="TAMU KELUAR" />
       <main>
         <section className="container narrow">
@@ -89,7 +88,7 @@ export default function FormKeluar() {
               </div>
               <button
                 className="btn btn-success"
-                onClick={() => window.location.reload()}
+                onClick={() => navigate("/form-masuk")}
               >
                 Selesai
               </button>
@@ -97,6 +96,11 @@ export default function FormKeluar() {
           )}
         </section>
       </main>
+
+      <Footer />
+
+    </div>
+
     </>
   );
 }
