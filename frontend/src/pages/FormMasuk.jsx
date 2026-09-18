@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SiteHeader from "../components/SiteHeader";
 import PeraturanModal from "../components/PeraturanModal";
 import Footer from "../components/Footer";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useToast } from "../context/ToastContext";
-import { kirimKunjungan, simpanIdTerakhir } from "../api/storage";
+
+import {
+  kirimKunjungan,
+  simpanIdTerakhir,
+  ambilIdTerakhir,
+  hapusIdTerakhir,
+  cekStatusKunjungan,
+} from "../api/storage";
+
+
 
 export default function FormMasuk() {
   useDocumentTitle("Tamu Masuk — BBMKG Wilayah II");
@@ -18,6 +27,36 @@ export default function FormMasuk() {
   const [keperluan, setKeperluan] = useState("");
   const [mengirim, setMengirim] = useState(false);
 
+
+
+  useEffect(() => {
+    async function cekKunjunganAktif() {
+      const idTerakhir = ambilIdTerakhir();
+
+      if (!idTerakhir) return;
+
+      try {
+        const kunjungan = await cekStatusKunjungan(idTerakhir);
+
+        if (
+          kunjungan.status === "Menunggu Persetujuan" ||
+          kunjungan.status === "Diterima"
+        ) {
+          navigate("/form-keluar");
+          return;
+        }
+
+        hapusIdTerakhir();
+      } catch {
+        hapusIdTerakhir();
+      }
+    }
+
+    cekKunjunganAktif();
+  }, [navigate]);
+
+
+
   function ubahNama(index, value) {
     setNamaTamu((prev) => prev.map((n, i) => (i === index ? value : n)));
   }
@@ -29,6 +68,8 @@ export default function FormMasuk() {
   function hapusKolomNama(index) {
     setNamaTamu((prev) => prev.filter((_, i) => i !== index));
   }
+
+  
 
   async function tanganiSubmit(e) {
     e.preventDefault();
