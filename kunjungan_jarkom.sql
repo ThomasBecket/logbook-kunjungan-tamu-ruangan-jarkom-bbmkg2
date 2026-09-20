@@ -29,13 +29,9 @@ SET NAMES utf8mb4;
 --         'petugas' -> approve/reject kunjungan tamu seperti biasa,
 --                      TIDAK bisa approve/reject admin baru
 --
--- status: 'Menunggu Persetujuan' -> baru daftar, belum bisa login
---         'Diterima'             -> sudah disetujui admin utama, bisa login
---         'Ditolak'              -> pendaftaran ditolak, tidak bisa login
---
 -- Admin PERTAMA (id_admin = '001', role = 'utama') wajib dibuat manual
 -- lewat phpMyAdmin, karena belum ada admin utama yang bisa approve dia.
--- Gunakan hashPassword.js untuk generate hash bcrypt-nya, contoh:
+-- Gunakan tools untuk generate hash bcrypt untuk password-nya untuk nanti dimasukkin ke databasenya langsung, contoh:
 --
 --   INSERT INTO admin (id_admin, username, password, nama_petugas, role)
 --   VALUES ('001', 'admin', '$2b$10$...hasil_hash_bcrypt...', 'Nama Anda', 'utama');
