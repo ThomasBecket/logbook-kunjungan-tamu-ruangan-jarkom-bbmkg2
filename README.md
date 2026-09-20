@@ -1,11 +1,11 @@
-**# Logbook Kunjungan Tamu Ruangan Jarkom BBMKG2**
+# Logbook Kunjungan Tamu Ruangan Jarkom BBMKG2
 
 Aplikasi web untuk mencatat, memantau, dan mengelola kunjungan tamu ke Ruangan Jaringan Komunikasi BBMKG Wilayah II sebagai pengganti buku tamu manual.
 
 Sistem terdiri dari halaman publik yang digunakan tamu untuk melakukan pencatatan kunjungan dan panel admin yang digunakan petugas untuk memverifikasi serta mengelola data kunjungan.
 
 
-**## Daftar Isi**
+## Daftar Isi
 
 * [Fitur](#fitur)
   * [Untuk Tamu](#untuk-tamu)
@@ -57,9 +57,9 @@ Sistem terdiri dari halaman publik yang digunakan tamu untuk melakukan pencatata
 
 
 
-**## Fitur**
+## Fitur
 
-**### Untuk Tamu**
+### Untuk Tamu
 
 * **Form Masuk** — tamu mengisi nama tamu, unit kerja/instansi, dan keperluan. Form mendukung kunjungan rombongan.
 
@@ -87,7 +87,7 @@ Sistem terdiri dari halaman publik yang digunakan tamu untuk melakukan pencatata
 
 
 
-**### Untuk Petugas (Admin)**
+### Untuk Petugas (Admin)
 
 * **Login Admin** — autentikasi menggunakan username dan password.
 
@@ -125,7 +125,7 @@ Sistem terdiri dari halaman publik yang digunakan tamu untuk melakukan pencatata
 
 
 
-**### Pengelolaan Admin**
+### Pengelolaan Admin
 
 Sistem memiliki dua jenis role admin:
 
@@ -179,7 +179,7 @@ ID yang sudah tidak digunakan dapat digunakan kembali ketika membuat admin baru.
 
 
 
-**## Status Kunjungan**
+## Status Kunjungan
 
 Sistem menggunakan beberapa status kunjungan:
 
@@ -214,7 +214,7 @@ Kunjungan Selesai
 
 
 
-**## Teknologi**
+## Teknologi
 
 | Bagian | Teknologi |
 | ------------------ | ------------------------------------------------------------------------ |
@@ -231,7 +231,7 @@ Kunjungan Selesai
 
 
 
-**## Struktur Folder**
+## Struktur Folder
 
 ```text
 logbook-kunjungan-tamu-ruangan-jarkom-bbmkg2/
@@ -274,9 +274,9 @@ logbook-kunjungan-tamu-ruangan-jarkom-bbmkg2/
 
 
 
-**## Instalasi**
+## Instalasi
 
-**### Persiapan**
+### Persiapan
 
 Pastikan perangkat telah memiliki:
 
@@ -292,7 +292,7 @@ MySQL dapat dijalankan melalui XAMPP, Laragon, atau instalasi MySQL secara langs
 
 
 
-**### 1. Setup Database**
+### 1. Setup Database
 
 1. Buat database baru melalui phpMyAdmin atau MySQL.
 
@@ -311,7 +311,7 @@ nomor_kunjungan
 
 
 
-**### 2. Setup Backend**
+### 2. Setup Backend
 
 Masuk ke folder backend:
 
@@ -367,7 +367,7 @@ Jika berhasil, server akan mengembalikan:
 
 
 
-**### 3. Setup Frontend**
+### 3. Setup Frontend
 
 Buka terminal baru:
 
@@ -392,7 +392,7 @@ http://localhost:5173
 
 
 
-**### 4. Menjalankan Backend dan Frontend Bersamaan**
+### 4. Menjalankan Backend dan Frontend Bersamaan
 
 Jika ingin menjalankan keduanya dari root project, gunakan `concurrently`:
 
@@ -420,9 +420,9 @@ npm run dev
 
 
 
-**## Routing Frontend**
+## Routing Frontend
 
-**### Halaman Publik**
+### Halaman Publik
 
 | Path | Fungsi |
 | -------------- | ------------------------------- |
@@ -435,7 +435,7 @@ npm run dev
 
 
 
-**### Halaman Admin**
+### Halaman Admin
 
 Seluruh halaman berikut berada di bawah `/admin` dan membutuhkan autentikasi:
 
@@ -455,9 +455,9 @@ Halaman `/admin/admin-list-petugas-admin` hanya dapat diakses oleh Admin Utama.
 
 
 
-**## Endpoint API**
+## Endpoint API
 
-**### Pengunjung**
+### Pengunjung
 
 Base URL:
 
@@ -481,7 +481,7 @@ Nama petugas verifikasi diambil otomatis dari sesi login/JWT.
 
 
 
-**### Admin**
+### Admin
 
 Base URL:
 
@@ -504,11 +504,11 @@ Endpoint pengelolaan admin dilindungi oleh autentikasi JWT dan pembatasan role A
 
 
 
-**## Database**
+## Database
 
 Database utama menggunakan MySQL.
 
-**### Tabel `admin`**
+### Tabel `admin`
 
 Menyimpan akun pengguna panel admin.
 
@@ -545,7 +545,7 @@ Password admin disimpan dalam bentuk hash menggunakan bcrypt.
 
 
 
-**### Tabel `pengunjung`**
+### Tabel `pengunjung`
 
 Menyimpan data utama setiap kunjungan:
 
@@ -564,7 +564,7 @@ alasan_ditolak
 
 
 
-**### Tabel `pengunjung_nama`**
+### Tabel `pengunjung_nama`
 
 Menyimpan nama tamu yang terhubung dengan suatu kunjungan.
 
@@ -574,7 +574,7 @@ Struktur ini memungkinkan satu nomor kunjungan digunakan untuk beberapa orang da
 
 
 
-**### Tabel `nomor_kunjungan`**
+### Tabel `nomor_kunjungan`
 
 Digunakan untuk menghasilkan nomor kunjungan berdasarkan tanggal dengan format:
 
@@ -594,7 +594,7 @@ Contoh:
 
 
 
-**## Keamanan**
+## Keamanan
 
 Sistem menggunakan beberapa mekanisme keamanan:
 
@@ -622,7 +622,7 @@ Sistem menggunakan beberapa mekanisme keamanan:
 
 
 
-**## Export Excel**
+## Export Excel
 
 Halaman **Riwayat Tamu** menyediakan fitur **Unduh Excel**.
 
@@ -668,7 +668,7 @@ npm install xlsx
 
 
 
-**## Realtime Update**
+## Realtime Update
 
 Sistem menggunakan Socket.IO untuk memberikan pembaruan data secara realtime.
 
@@ -695,7 +695,7 @@ Dengan mekanisme ini, perubahan status dapat diterima oleh halaman yang sedang t
 
 
 
-**## Waktu dan Tanggal**
+## Waktu dan Tanggal
 
 Sistem menggunakan zona waktu Indonesia untuk menentukan tanggal berjalan.
 
@@ -719,7 +719,7 @@ Waktu masuk dan waktu keluar kunjungan tetap dicatat oleh backend dan database.
 
 
 
-**## Halaman Developer**
+## Halaman Developer
 
 Footer halaman publik memiliki link menuju halaman informasi tim pengembang:
 
@@ -764,7 +764,7 @@ Halaman developer berisi:
 
 
 
-**## Deployment**
+## Deployment
 
 Aplikasi dirancang agar dapat digunakan pada jaringan internal BBMKG.
 
@@ -796,7 +796,7 @@ Pembatasan jaringan bukan pengganti autentikasi aplikasi. JWT dan pembatasan rol
 
 
 
-**## Catatan Pengembangan**
+## Catatan Pengembangan
 
 * File `.env` tidak disertakan dalam repository dan harus dibuat sendiri pada komputer/server yang menjalankan backend.
 
