@@ -32,23 +32,34 @@ export default function AdminTamuHariIni() {
 
   }, []);
 
+  
+
   const labelHariIni = useMemo(
     () =>
-      new Date().toLocaleDateString("id-ID", {
+      new Intl.DateTimeFormat("id-ID", {
+        timeZone: "Asia/Jakarta",
         weekday: "long",
         day: "2-digit",
         month: "long",
         year: "numeric",
-      }),
+      }).format(new Date()),
     []
   );
 
   const tamuHariIni = useMemo(() => {
-    const kunciHariIni = new Date().toISOString().slice(0, 10);
+    const kunciHariIni = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Jakarta",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date());
+
     return daftarTamu.filter(
       (v) => v.waktuMasukIso && v.waktuMasukIso.slice(0, 10) === kunciHariIni
     );
   }, [daftarTamu]);
+
+
 
   return (
     <section className="dashboard">
